@@ -25,7 +25,7 @@ chart_studio.tools.set_credentials_file(username='alexhewson',
                                   api_key='3EEPd2mvBSQd1vGCq14s')
 
 ##Set working directory
-os.chdir("/Users/Alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Weekly prison population")
+os.chdir("/Users/Alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Prison-population")
 
 
 ##Setting templates
@@ -43,13 +43,13 @@ colorway = ("#A01D28", "#499CC9", "#F9A237", "#6FBA3A"))
 )
 
 ##Reading in data
-df = pd.read_csv("female_population.csv",
+df = pd.read_csv("Data/female_population.csv",
                  usecols=["date", "population"],
                  index_col=["date"],
                  parse_dates = ['date'])
 
 df['year'] = df.index.year
-df['week'] = df.index.week
+df['week'] = df.index.isocalendar().week
 df['month'] = df.index.month
 
 df['month'] = df['month'].apply(lambda x: calendar.month_abbr[x])
@@ -105,37 +105,6 @@ fig.update_layout(title="<b>Female prison population in England and Wales</b>",
                       ],
                   )
 
-
-'''Still in development. Range selector is no longer working following switch of
-x-values to weeks of the year'''
-
-# fig.update_xaxes(hoverformat = '%d %b %Y',
-#                  tickformatstops = [
-#                          dict(dtickrange=[None, "M0.5"], value="%e %b"),
-#                          dict(dtickrange=["M0.5", "M11"], value="%b %Y"),
-#                          dict(dtickrange=["M11", None], value="%Y")
-#                          ],
-#                   rangeselector=dict(
-#                           x=-0.06,
-#                           y=0.91,
-#                           buttons=list([
-#                                   dict(count=3,
-#                                       label="3m",
-#                                       step="month",
-#                                       stepmode="backward"),
-#                                  dict(count=6,
-#                                       label="6m",
-#                                       step="month",
-#                                       stepmode="backward"),
-#                                  dict(count=1,
-#                                       label="1y",
-#                                       step="year",
-#                                       stepmode="backward"),
-#                                  dict(step="all")])
-#                                  )
-#                   )
-
-
 fig.update_yaxes(range=[3000, 4200], nticks=10)
 
 
@@ -144,10 +113,10 @@ This section outputs the final chart, with static; interactive offline; and inte
 '''
 
 ##Plot static image
-fig.write_image("images/female_prison_population.png", width=655, height=500)
+# fig.write_image("images/female_prison_population.png", width=655, height=500)
 
 ##Plot file offline
-# fig.show(config={'displayModeBar': False})
+fig.show(config={'displayModeBar': False})
 
 ##Plot file online with PRT logo
 
@@ -160,6 +129,4 @@ fig.layout.images =[dict(
                 xanchor="right", yanchor="top"
                 )]
 
-py.plot(fig, filename = 'Female prison population E&W', auto_open=True)
-
-
+# py.plot(fig, filename = 'Female prison population E&W', auto_open=True)
