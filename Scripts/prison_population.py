@@ -49,7 +49,7 @@ df = pd.read_csv("Data/prison_population.csv",
                  parse_dates = ['date'])
 
 df['year'] = df.index.year
-df['week'] = df.index.isocalendar().week
+df['week'] = df.index.week
 df['month'] = df.index.month
 
 df['month'] = df['month'].apply(lambda x: calendar.month_abbr[x])
@@ -112,22 +112,22 @@ This section outputs the final chart, with static; interactive offline; and inte
 '''
 
 ##Plot static image
-fig.write_image("images/prison_population.png", width=655, height=500)
+# fig.write_image("images/prison_population.png", width=655, height=500)
 
 ##Plot file offline
-# fig.show(config={'displayModeBar': False})
+fig.show(config={'displayModeBar': False})
 
 ##Plot file online with PRT logo
 
 ##PRT logo
-fig.layout.images =[dict(
-                source="https://i.ibb.co/jhfYbyc/PRTlogo-RGB.png",
-                xref="paper", yref="paper",
-                x=0.04, y=1.25,
-                sizex=0.15, sizey=0.15,
-                xanchor="right", yanchor="top"
-                )]
+# fig.layout.images =[dict(
+#                 source="https://i.ibb.co/jhfYbyc/PRTlogo-RGB.png",
+#                 xref="paper", yref="paper",
+#                 x=0.04, y=1.25,
+#                 sizex=0.15, sizey=0.15,
+#                 xanchor="right", yanchor="top"
+#                 )]
 
-py.plot(fig, filename = 'Weekly prison population E&W', auto_open=True)
+# py.plot(fig, filename = 'Weekly prison population E&W', auto_open=True)
 
 
