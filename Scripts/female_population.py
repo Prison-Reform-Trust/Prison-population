@@ -113,10 +113,10 @@ This section outputs the final chart, with static; interactive offline; and inte
 '''
 
 ##Plot static image
-# fig.write_image("images/female_prison_population.png", width=655, height=500)
+fig.write_image("images/female_prison_population.png", width=655, height=500)
 
 ##Plot file offline
-fig.show(config={'displayModeBar': False})
+# fig.show(config={'displayModeBar': False})
 
 ##Plot file online with PRT logo
 
@@ -129,4 +129,4 @@ fig.layout.images =[dict(
                 xanchor="right", yanchor="top"
                 )]
 
-# py.plot(fig, filename = 'Female prison population E&W', auto_open=True)
+py.plot(fig, filename = 'Female prison population E&W', auto_open=True)
