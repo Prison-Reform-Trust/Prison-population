@@ -115,7 +115,7 @@ This section outputs the final chart, with static; interactive offline; and inte
 fig.write_image("images/prison_population.png", width=655, height=500)
 
 ##Plot file offline
-fig.show(config={'displayModeBar': False})
+#fig.show(config={'displayModeBar': False})
 
 ##Plot file online with PRT logo
 
