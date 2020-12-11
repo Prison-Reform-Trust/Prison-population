@@ -7,6 +7,44 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "prison_population.csv",
+			"settings":
+			{
+				"buffer_size": 6109,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "female_population.csv",
+			"settings":
+			{
+				"buffer_size": 5759,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HDC.csv",
+			"settings":
+			{
+				"buffer_size": 795,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "date,prisoners_pos,prisons_p,staff_pos,prisons_s\n2020-03-18,1,1,0,0\n2020-03-25,19,10,4,4\n2020-03-26,27,14,5,5\n2020-03-29,55,21,13,7\n2020-03-30,65,23,14,8\n2020-03-31,69,25,14,8\n2020-04-01,73,27,15,9\n2020-04-02,88,29,15,9\n2020-04-05,107,38,19,12\n2020-04-06,116,43,19,12\n2020-04-07,129,47,24,13\n2020-04-08,149,47,28,17\n2020-04-13,207,57,62,28\n2020-04-14,218,57,82,35\n2020-04-15,232,60,96,38\n2020-04-16,255,62,138,49\n2020-04-19,278,64,194,53\n2020-04-20,287,65,217,54\n2020-04-21,294,66,231,55\n2020-04-22,300,69,237,57\n2020-04-23,304,69,257,59\n2020-04-26,324,71,296,59\n2020-04-27,332,69,317,62\n2020-04-28,337,71,337,63\n2020-04-29,341,72,364,64\n2020-04-30,345,73,371,64\n2020-05-03,357,73,395,67\n2020-05-04,362,74,401,67\n2020-05-05,386,74,433,67\n2020-05-06,390,74,447,67\n2020-05-10,397,74,449,69\n2020-05-11,399,74,493,69\n2020-05-12,401,74,501,70\n2020-05-13,404,74,506,70\n2020-05-14,405,74,528,71\n2020-05-17,411,74,540,71\n2020-05-18,422,74,542,72\n2020-05-19,432,75,555,73\n2020-05-20,434,75,563,74\n2020-05-21,437,75,575,77\n2020-05-26,447,77,882,104\n2020-05-27,452,77,897,105\n2020-05-28,459,77,907,105\n2020-05-31,466,79,923,105\n2020-06-01,477,79,935,105\n2020-06-02,479,79,940,105\n2020-06-03,479,79,944,105\n2020-06-04,482,79,947,105\n2020-06-07,485,80,954,105\n2020-06-08,486,80,956,105\n2020-06-09,490,80,961,105\n2020-06-10,490,80,964,105\n2020-06-11,492,80,961,105\n2020-06-14,500,80,965,105\n2020-06-15,502,80,971,105\n2020-06-16,503,81,978,105\n2020-06-17,503,81,980,105\n2020-06-18,505,81,984,105\n2020-06-19,510,83\n2020-06-26,520,83\n2020-07-03,520,84\n2020-07-10,530,84\n2020-07-17,530,84\n2020-07-24,530,85\n2020-07-31,540,85\n2020-08-07,540,86\n2020-08-31,556,87\n2020-09-30,646,89\n2020-10-30,1529,99\n2020-10-30,1529,99",
+			"file": "/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Coronavirus/prison_cases.csv",
+			"file_size": 1679,
+			"file_write_time": 132497570795583514,
+			"settings":
+			{
+				"buffer_size": 1698,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -41,10 +79,19 @@
 	"expanded_folders":
 	[
 		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Prison-population/Data",
-		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Weekly prison population/Scripts"
+		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Prison-population/Scripts"
 	],
 	"file_history":
 	[
+		"/Users/alex/opt/environment.yml",
+		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Coronavirus/prison_cases.csv",
+		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Prison-population/Scripts/prison_population.py",
+		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Prison-population/Data/prison_population.csv",
+		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Prison-population/Data/female_population.csv",
+		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Prison-population/Data/HDC.csv",
+		"/Users/alex/Downloads/csvs-behind-data-tools-1-2019/sentencing-2019.csv",
+		"/Users/alex/Downloads/git-lfs-darwin-amd64-v2.12.0/README.md",
+		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Coronavirus/prison_cases.py",
 		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Weekly prison population/Data/HDC.csv",
 		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Weekly prison population/Data/female_population.csv",
 		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Weekly prison population/Data/prison_population.csv",
@@ -54,11 +101,11 @@
 	],
 	"find":
 	{
-		"height": 0.0
+		"height": 26.0
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 101.0,
 		"where_history":
 		[
 		]
@@ -68,6 +115,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"range"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -85,18 +133,131 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "prison_population.csv",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6109,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6109,
+								6109
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 5411.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "female_population.csv",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5759,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5759,
+								5759
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 5410.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "HDC.csv",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 795,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								790,
+								790
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 89.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Coronavirus/prison_cases.csv",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1698,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1698,
+								1698
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 446.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 0.0
+		"height": 26.0
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 38.0
 	},
 	"layout":
 	{
@@ -129,7 +290,7 @@
 	"project": "Prison-population.sublime-project",
 	"replace":
 	{
-		"height": 0.0
+		"height": 48.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -138,6 +299,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"",
+				"Data/female_population.csv"
+			]
 		],
 		"width": 0.0
 	},

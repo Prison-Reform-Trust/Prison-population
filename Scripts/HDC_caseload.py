@@ -113,7 +113,7 @@ This section outputs the final chart, with static; interactive offline; and inte
 '''
 
 ##Plot static image
-fig.write_image("images/HDC_population.png", width=655, height=500)
+fig.write_image("images/HDC_population.png", width=655, height=500, scale=2)
 
 ##Plot file offline
 # fig.show(config={'displayModeBar': False})

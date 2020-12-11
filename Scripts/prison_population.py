@@ -86,7 +86,10 @@ fig.update_layout(title="<b>Prison population in England and Wales</b>",
                   xaxis_ticks="inside",
                   xaxis_tickcolor='#54565B',
                   template=prt_template,                   
-                  showlegend=False,
+                  showlegend=True,
+                  legend=dict(
+                      yanchor="top",
+                      y=0.915),
                   hovermode='x',
                   modebar_activecolor="#A12833",
                   width=655,
@@ -112,12 +115,16 @@ This section outputs the final chart, with static; interactive offline; and inte
 '''
 
 ##Plot static image
-fig.write_image("images/prison_population.png", width=655, height=500)
+fig.write_image("images/prison_population.png", width=655, height=500, scale=2)
 
 ##Plot file offline
 #fig.show(config={'displayModeBar': False})
 
 ##Plot file online with PRT logo
+
+#Removing the legend
+
+fig.update_layout(showlegend=False)
 
 ##PRT logo
 fig.layout.images =[dict(
@@ -129,5 +136,3 @@ fig.layout.images =[dict(
                 )]
 
 py.plot(fig, filename = 'Weekly prison population E&W', auto_open=True)
-
-
