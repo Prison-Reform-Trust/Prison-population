@@ -7,7 +7,6 @@ Created on Wed Apr 15 17:41:55 2020
 """
 
 ##Importing libaries
-import os
 import plotly.graph_objs as go #Offline plotting
 import chart_studio.plotly as py #Online plotting
 import plotly.io as pio
@@ -24,10 +23,6 @@ import chart_studio
 chart_studio.tools.set_credentials_file(username='alexhewson',
                                   api_key='3EEPd2mvBSQd1vGCq14s')
 
-##Set working directory
-os.chdir("/Users/Alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Prison-population")
-
-
 ##Setting templates
 prt_template = go.layout.Template(
     layout=go.Layout(title_font=dict(
@@ -43,7 +38,7 @@ colorway = ("#A01D28", "#499CC9", "#F9A237", "#6FBA3A"))
 )
 
 ##Reading in data
-df = pd.read_csv("Data/HDC.csv",
+df = pd.read_csv("../Data/HDC.csv",
                  usecols=["date", "hdc_pop"],
                  index_col=["date"],
                  parse_dates = ['date'])
@@ -62,7 +57,7 @@ months = [datetime.date(2020, m, 1).strftime('%b') for m in range(1, 13)]
 
 fig = go.Figure()
 
-for year in df['year']['2017':'2020'].unique():
+for year in df['year']['2018':'2021'].unique():
   df_year = df[df['year'] == year]
   
   fig.add_trace(go.Scatter(x=df_year['week'], y=df_year['hdc_pop'],
@@ -113,7 +108,7 @@ This section outputs the final chart, with static; interactive offline; and inte
 '''
 
 ##Plot static image
-fig.write_image("images/HDC_population.png", width=655, height=500, scale=2)
+fig.write_image("../images/HDC_population.png", width=655, height=500, scale=2)
 
 ##Plot file offline
 # fig.show(config={'displayModeBar': False})

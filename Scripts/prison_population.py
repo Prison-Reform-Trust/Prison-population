@@ -7,7 +7,6 @@ Created on Wed Apr 15 17:41:55 2020
 """
 
 ##Importing libaries
-import os
 import plotly.graph_objs as go #Offline plotting
 import chart_studio.plotly as py #Online plotting
 import plotly.io as pio
@@ -24,10 +23,6 @@ import chart_studio
 chart_studio.tools.set_credentials_file(username='alexhewson',
                                   api_key='3EEPd2mvBSQd1vGCq14s')
 
-##Set working directory
-os.chdir("/Users/Alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Prison-population")
-
-
 # ##Setting templates
 prt_template = go.layout.Template(
     layout=go.Layout(title_font=dict(
@@ -43,7 +38,7 @@ prt_template = go.layout.Template(
 )
 
 ##Reading in data
-df = pd.read_csv("Data/prison_population.csv",
+df = pd.read_csv("../Data/prison_population.csv",
                  usecols=["date", "population"],
                  index_col=["date"],
                  parse_dates = ['date'])
@@ -55,13 +50,13 @@ df['month'] = df.index.month
 df['month'] = df['month'].apply(lambda x: calendar.month_abbr[x])
 
 weeks = 52/12.0
-months = [datetime.date(2020, m, 1).strftime('%b') for m in range(1, 13)]
+months = [datetime.date(2021, m, 1).strftime('%b') for m in range(1, 13)]
 
 ##Plotting
 
 fig = go.Figure()
 
-for year in df['year']['2017':'2020'].unique():
+for year in df['year']['2018':'2021'].unique():
   df_year = df[df['year'] == year]
   
   fig.add_trace(go.Scatter(x=df_year['week'], y=df_year['population'],
@@ -107,7 +102,7 @@ fig.update_layout(title="<b>Prison population in England and Wales</b>",
                       ],
                   )
 
-fig.update_yaxes(range=[78000, 87000], nticks=6)
+fig.update_yaxes(range=[76000, 87000], nticks=6)
 
 
 '''
@@ -115,10 +110,10 @@ This section outputs the final chart, with static; interactive offline; and inte
 '''
 
 ##Plot static image
-fig.write_image("images/prison_population.png", width=655, height=500, scale=2)
+fig.write_image("../images/prison_population.png", width=655, height=500, scale=2)
 
 ##Plot file offline
-#fig.show(config={'displayModeBar': False})
+# fig.show(config={'displayModeBar': False})
 
 ##Plot file online with PRT logo
 
