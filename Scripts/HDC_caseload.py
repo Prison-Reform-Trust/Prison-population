@@ -82,7 +82,7 @@ fig.update_layout(title="<b>HDC population in England and Wales</b>",
                   xaxis_ticks="inside",
                   xaxis_tickcolor='#54565B',
                   template=prt_template,                   
-                  showlegend=False,
+                  showlegend=True,
                   hovermode='x',
                   modebar_activecolor="#A12833",
                   width=655,
@@ -114,6 +114,10 @@ fig.write_image("../images/HDC_population.png", width=655, height=500, scale=2)
 # fig.show(config={'displayModeBar': False})
 
 ##Plot file online with PRT logo
+
+#Removing the legend
+fig.update_layout(showlegend=False)
+
 
 ##PRT logo
 fig.layout.images =[dict(
