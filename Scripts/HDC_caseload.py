@@ -7,23 +7,30 @@ Created on Wed Apr 15 17:41:55 2020
 """
 
 ##Importing libaries
-import plotly.graph_objs as go #Offline plotting
-import chart_studio.plotly as py #Online plotting
+import os
+import plotly.graph_objs as go  # Offline plotting
+import chart_studio.plotly as py  # Online plotting
+import chart_studio
 import plotly.io as pio
 import pandas as pd
 import datetime
 import calendar
-# import modin.pandas as pd #This utilises all CPU cores, rather than Pandas default one core 
-pio.renderers.default = "browser"
-pio.templates
 
+##Importing environment variables with dotenv
+from dotenv import load_dotenv, find_dotenv
+dotenv_path = find_dotenv()
+load_dotenv(dotenv_path)
 
 ##Adding plot.ly credentials
-import chart_studio
-chart_studio.tools.set_credentials_file(username='alexhewson',
-                                  api_key='3EEPd2mvBSQd1vGCq14s')
+chart_studio.tools.set_credentials_file(
+    username=os.getenv("PLOTLY_USERNAME"), api_key=os.getenv("PLOTLY_API_KEY")
+)
 
-##Setting templates
+##Setting plotly renderer
+pio.renderers.default = "browser"
+
+##Loading and setting templates
+pio.templates
 prt_template = go.layout.Template(
     layout=go.Layout(title_font=dict(
             family="Helvetica Neue, Arial", 
