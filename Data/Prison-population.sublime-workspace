@@ -7,33 +7,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "prison_population.csv",
-			"settings":
-			{
-				"buffer_size": 6160,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "female_population.csv",
-			"settings":
-			{
-				"buffer_size": 5807,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "HDC.csv",
-			"settings":
-			{
-				"buffer_size": 843,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -67,11 +40,37 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Prison-population/Data",
-		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Prison-population/Scripts"
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/Prison-population/Data"
 	],
 	"file_history":
 	[
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/Prison-population/Data/prison_population.csv",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/Prison-population/Data/female_population.csv",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/Prison-population/Data/HDC.csv",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/Script library/pandas.py",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/Script library/EDA step_by_step.py",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/long-sentences/data/raw/Sentencing_2020.csv",
+		"/Users/alex/opt/Basic DS environment.yml",
+		"/Users/alex/Creative Cloud Files/Winter 2021 Factfile/Python scripts/older_prisoner_growth.py",
+		"/Users/alex/Documents/EMDM note",
+		"/Users/alex/Creative Cloud Files/HDC/hdc_ethnicity AH.py",
+		"/Users/alex/Creative Cloud Files/HDC/Data/hdc_ethnicityAH.csv",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/covid-19-prisons/src/data/weekly_excel_to_csv.py",
+		"/Users/alex/.kaggle/kaggle.json",
+		"/Users/alex/Downloads/2021-03-28-083259-ELEMNT BOLT 44B6-140-0.fit",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/covid-19-prisons/src/visualization/weekly_positive_covid_tests.py",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/womens-pfa-analysis/README.md",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/covid-19-prisons/src/weekly_covid_stats.sh",
+		"/Users/alex/Creative Cloud Files/HDC/Data/4_years_and_under.csv",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/Prison-population/weekly_covid_stats.sh",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/Prison-population/Scripts/run_prison_population.sh",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/covid-19-prisons/data/interim/weekly_combined_file.csv",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/covid-19-prisons/.env",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/Prison-population/.env",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/Prison-population/Scripts/prison_population.py",
+		"/Users/alex/opt/env.yaml",
+		"/Users/alex/opt/miniconda3/envs/minimal_ds/etc/conda/activate.d/env_vars.sh",
+		"/Users/alex/Prison Reform Trust/Prison Reform Trust Team Site - Policy and Communications documents/Python/second_cookiecutter_test/README.md",
 		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Coronavirus/scripts/prison_cases_monthly.py",
 		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Coronavirus/data/prison_cases_monthly.csv",
 		"/Users/alex/Prison Reform Trust/Policy and Comms Team - Documents/Python/Coronavirus/prison_cases.csv",
@@ -108,6 +107,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"sex",
 			"prt_te",
 			"color",
 			"category",
@@ -120,103 +120,21 @@
 		"regex": false,
 		"replace_history":
 		[
+			"df"
 		],
 		"reverse": false,
+		"scrollbar_highlights": true,
 		"show_context": true,
 		"use_buffer2": true,
+		"use_gitignore": true,
 		"whole_word": false,
 		"wrap": true
 	},
 	"groups":
 	[
 		{
-			"selected": 2,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "prison_population.csv",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6160,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								6157,
-								6157
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 5461.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "female_population.csv",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5807,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5803,
-								5803
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 5461.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "HDC.csv",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 843,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								587,
-								587
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 140.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],
