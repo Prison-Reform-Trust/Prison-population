@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Apr 15 17:41:55 2020
+Created on Mon Jan 17 12:16:25 2022
 
-@author: Alex
+@author: alex
 """
 
 ##Importing libaries
@@ -14,7 +14,7 @@ import chart_studio
 import plotly.io as pio
 import pandas as pd
 import datetime
-import calendar
+import textwrap
 
 ##Importing environment variables with dotenv
 from dotenv import load_dotenv, find_dotenv
@@ -27,9 +27,6 @@ chart_studio.tools.set_credentials_file(
     username=os.getenv("PLOTLY_USERNAME"), api_key=os.getenv("PLOTLY_API_KEY")
 )
 
-##Setting plotly renderer
-pio.renderers.default = "browser"
-
 ##Loading and setting templates
 pio.templates
 prt_template = go.layout.Template(
@@ -40,113 +37,173 @@ prt_template = go.layout.Template(
         font_size=12,
         paper_bgcolor="#FBFAF7",
         plot_bgcolor="#FBFAF7",
-        colorway=("#A01D28", "#499CC9", "#F9A237", "#6FBA3A"),
+        colorway=("#A01D28", "#499CC9", "#F9A237", "#6FBA3A", "#573D6B"),
     )
+)
+
+config = dict(
+    {
+        "scrollZoom": False,
+        "displayModeBar": False,
+        "editable": False,
+        "displaylogo": False,
+        "showAxisDragHandles": False,
+    }
 )
 
 ##Reading in data
 df = pd.read_csv(
     "../Data/female_population.csv",
     usecols=["date", "population"],
-    index_col=["date"],
     parse_dates=["date"],
 )
 
-df["year"] = df.index.year
-df["week"] = df.index.isocalendar().week
-df["month"] = df.index.month
+##Filtering year range
+year = "2018"
+mask = df["date"].dt.year >= int(year)
+df_include = df[mask]
 
-df["month"] = df["month"].apply(lambda x: calendar.month_abbr[x])
+##Calculating xaxis_tickvals
+start = datetime.datetime(2021, 1, 1)
+end = datetime.datetime(2021, 12, 31)
 
-weeks = 52 / 12.0
-months = [datetime.date(2021, m, 1).strftime("%b") for m in range(1, 13)]
+xtick_vals = pd.date_range(start, end)
+filt = xtick_vals.is_month_start
 
+month_weeks = xtick_vals[filt].isocalendar().week
+month_weeks[0] = 1  # preventing week 1 from starting at the end of previous year
+
+## Chart title
+title = textwrap.wrap("<b>Female prison population in England and Wales</b>", width=65)
 
 ##Plotting
 
 fig = go.Figure()
 
-for year in df["year"]["2018":"2021"].unique():
-    df_year = df[df["year"] == year]
+trace_list = []
+for year in df_include["date"].dt.year.unique():
+    df_year = df_include[df_include["date"].dt.year == year]
 
-    fig.add_trace(
-        go.Scatter(
-            x=df_year["week"],
-            y=df_year["population"],
-            mode="lines",
-            connectgaps=True,
-            hovertext=df["month"],
-            hovertemplate="<b>%{hovertext}</b><br>" + "%{y:,.0f}",
-            name=str(year),
-        )
+    trace = go.Scatter(
+        #         x=df_year["date"].dt.isocalendar().week,
+        x=df_year["date"].dt.strftime("Week %U"),
+        #         x=df_year["date"],
+        y=df_year["population"],
+        mode="lines",
+        connectgaps=True,
+        hovertext=df["date"].dt.strftime(" "),
+        hovertemplate="<b>%{hovertext}</b><br>" + "%{y:,.0f}",
+        name=str(year),
     )
+
+    trace_list.append(trace)
+
+fig.add_traces(trace_list)
 
 
 ##Edit the layout
 
 fig.update_layout(
-    title="<b>Female prison population in England and Wales</b>",
-    yaxis_title="Women in prison",
+    margin=dict(l=60, b=75),
+    title="<br>".join(title),
+    title_y=0.94,
+    title_yanchor="bottom",
+    yaxis_title="",
     yaxis_tickformat=",.0f",
     xaxis_showgrid=False,
-    xaxis_tickmode="array",
-    xaxis_tickvals=[(2 * k - 1) * weeks / 2 for k in range(1, 13)],
-    xaxis_ticktext=months,
-    xaxis_ticks="inside",
+    xaxis_tickvals=month_weeks,
+    xaxis_ticktext=xtick_vals[filt].strftime("%b"),
     xaxis_tickcolor="#54565B",
     template=prt_template,
-    showlegend=True,
-    legend=dict(yanchor="top", y=0.915),
-    hovermode="x",
+    showlegend=False,
+    hovermode="x unified",
     modebar_activecolor="#A12833",
     width=655,
     height=500,
-    annotations=[
-        go.layout.Annotation(
-            x=-0.08,
-            y=-0.19,
-            showarrow=False,
-            text="<b>Source: Ministry of Justice Prison Population Bulletin\n</b>",
-            font_size=12,
-            xref="paper",
-            yref="paper",
-        )
-    ],
 )
 
-fig.update_yaxes(range=[3000, 4200], nticks=10)
+## Chart annotations
+annotations = []
 
+y_list = [0, -25, -45, 0, 0]
+
+# Adding trace annotations
+for i in range(0, len(trace_list)):
+    annotations.append(
+        dict(
+            xref="x",
+            yref="y",
+            x=trace_list[i].x[-1],
+            y=trace_list[i].y[-2] + y_list[i],
+            text=str(trace_list[i].name),
+            xanchor="left",
+            align="left",
+            showarrow=False,
+            font_color=prt_template.layout.colorway[i],
+            font_size=10,
+        )
+    )
+
+# Adding source label
+annotations.append(
+    dict(
+        xref="paper",
+        yref="paper",
+        x=-0.08,
+        y=-0.19,
+        align="left",
+        showarrow=False,
+        text="<b>Source: Ministry of Justice Prison Population Bulletin</b>",
+        font_size=12,
+    )
+)
+
+# Adding y-axis label
+annotations.append(
+    dict(
+        xref="x",
+        yref="paper",
+        x="Week 00",
+        y=1.04,
+        align="left",
+        xanchor="left",
+        showarrow=False,
+        text="Women in prison",
+        font_size=12,
+    )
+)
+
+# Adding annotations to layout
+fig.update_layout(annotations=annotations)
+
+fig.update_yaxes(range=[2990, 4210], nticks=10)
+fig.update_xaxes(range=[-1, 52])
+
+##Plot file offline
+fig.show(config=config)
 
 """
-This section outputs the final chart, with static; interactive offline; and interactive online versions.
+Outputting image and online charts
 """
 
-##Plot static image
+##Image
 fig.write_image(
     "../images/female_prison_population.png", width=655, height=500, scale=2
 )
 
-##Plot file offline
-# fig.show(config={'displayModeBar': False})
+##Online
 
-
-##Plot file online with PRT logo
-
-# Removing the legend
-
-fig.update_layout(showlegend=False)
-
-##PRT logo
+# PRT logo
 fig.layout.images = [
     dict(
         source="https://i.ibb.co/jhfYbyc/PRTlogo-RGB.png",
         xref="paper",
         yref="paper",
-        x=0.04,
+        x=-0.08,
         y=1.25,
         sizex=0.15,
         sizey=0.15,
-        xanchor="right",
+        xanchor="left",
         yanchor="top",
     )
 ]
