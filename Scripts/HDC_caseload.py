@@ -124,7 +124,7 @@ fig.update_layout(
 ## Chart annotations
 annotations = []
 
-y_list = [0, -25, -45, 0, 0]
+y_list = [0, 0, 0, 0, 0]
 
 # Adding trace annotations
 for i in range(0, len(trace_list)):
