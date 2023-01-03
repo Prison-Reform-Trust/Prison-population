@@ -123,6 +123,8 @@ fig.update_layout(
 ## Chart annotations
 annotations = []
 
+y_list = [0, 0, 0, 0, -400]
+
 # Adding trace annotations
 for i in range(0, len(trace_list)):
     annotations.append(
@@ -130,7 +132,7 @@ for i in range(0, len(trace_list)):
             xref="x",
             yref="y",
             x=trace_list[i].x[-1],
-            y=trace_list[i].y[-2],
+            y=trace_list[i].y[-2] + y_list[i],
             text=str(trace_list[i].name),
             xanchor="left",
             align="left",
