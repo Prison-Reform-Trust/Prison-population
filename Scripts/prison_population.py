@@ -59,7 +59,7 @@ df = pd.read_csv(
 )
 
 ##Filtering year range
-year = "2018"
+year = "2019"
 mask = df["date"].dt.year >= int(year)
 df_include = df[mask]
 
@@ -123,7 +123,7 @@ fig.update_layout(
 ## Chart annotations
 annotations = []
 
-y_list = [0, 0, 0, 0, -400]
+y_list = [0, 0, 0, 0, 0]
 
 # Adding trace annotations
 for i in range(0, len(trace_list)):
@@ -132,7 +132,7 @@ for i in range(0, len(trace_list)):
             xref="x",
             yref="y",
             x=trace_list[i].x[-1],
-            y=trace_list[i].y[-2] + y_list[i],
+            y=trace_list[i].y[-1] + y_list[i],
             text=str(trace_list[i].name),
             xanchor="left",
             align="left",
