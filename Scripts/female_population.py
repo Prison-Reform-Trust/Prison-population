@@ -35,8 +35,8 @@ prt_template = go.layout.Template(
         font_color="#54565B",
         font_family="Helvetica Neue, Arial",
         font_size=12,
-        paper_bgcolor="#FBFAF7",
-        plot_bgcolor="#FBFAF7",
+        paper_bgcolor="#F7F2F2",
+        plot_bgcolor="#F7F2F2",
         colorway=("#A01D28", "#499CC9", "#F9A237", "#6FBA3A", "#573D6B"),
     )
 )
