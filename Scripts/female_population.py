@@ -53,7 +53,7 @@ config = dict(
 
 ##Reading in data
 df = pd.read_csv(
-    "../Data/female_population.csv",
+    "Data/female_population.csv",
     usecols=["date", "population"],
     parse_dates=["date"],
 )

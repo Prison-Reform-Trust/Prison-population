@@ -53,7 +53,7 @@ config = dict(
 
 ##Reading in data
 df = pd.read_csv(
-    "../Data/HDC.csv", usecols=["date", "hdc_pop"], parse_dates=["date"], thousands=","
+    "Data/HDC.csv", usecols=["date", "hdc_pop"], parse_dates=["date"], thousands=","
 )
 
 ##Filtering year range
