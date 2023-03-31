@@ -185,7 +185,7 @@ Outputting image and online charts
 """
 
 ##Image
-fig.write_image("../images/prison_population.png", width=655, height=500, scale=2)
+fig.write_image("images/prison_population.png", width=655, height=500, scale=2)
 
 ##Online
 

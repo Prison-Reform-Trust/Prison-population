@@ -186,7 +186,7 @@ Outputting image and online charts
 """
 
 ##Image
-fig.write_image("../images/HDC_population.png", width=655, height=500, scale=2)
+fig.write_image("images/HDC_population.png", width=655, height=500, scale=2)
 
 ##Online
 

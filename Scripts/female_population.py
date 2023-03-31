@@ -188,7 +188,7 @@ Outputting image and online charts
 
 ##Image
 fig.write_image(
-    "../images/female_prison_population.png", width=655, height=500, scale=2
+    "images/female_prison_population.png", width=655, height=500, scale=2
 )
 
 ##Online
