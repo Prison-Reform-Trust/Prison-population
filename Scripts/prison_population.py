@@ -108,6 +108,7 @@ fig.update_layout(
     title_yanchor="bottom",
     yaxis_title="",
     yaxis_tickformat=",.0f",
+    yaxis_dtick=2000,
     xaxis_showgrid=False,
     xaxis_tickvals=month_weeks,
     xaxis_ticktext=xtick_vals[filt].strftime("%b"),
@@ -174,11 +175,11 @@ annotations.append(
 # Adding annotations to layout
 fig.update_layout(annotations=annotations)
 
-fig.update_yaxes(range=[75900, 86100], nticks=6)
+fig.update_yaxes(range=[75900, 88100], nticks=6)
 fig.update_xaxes(range=[-1, 52])
 
 ##Plot file offline
-fig.show(config=config)
+# fig.show(config=config)
 
 """
 Outputting image and online charts
