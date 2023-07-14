@@ -179,7 +179,7 @@ fig.update_yaxes(range=[0, 3550], nticks=10)
 fig.update_xaxes(range=[-1, 52])
 
 ##Plot file offline
-fig.show(config=config)
+# fig.show(config=config)
 
 """
 Outputting image and online charts
