@@ -1,0 +1,22 @@
+name: prison_population
+channels:
+  - defaults
+dependencies:
+  - notebook
+  - cookiecutter
+  - black
+  - jupyterlab
+  - lxml
+  - matplotlib
+  - odfpy
+  - poppler
+  - python-dotenv
+  - seaborn
+  - plotly
+  - nbqa
+  - pandas
+  - python-kaleido
+  - chart-studio
+  - ipywidgets
+  - plotly-geo
+prefix: /Users/alex/opt/miniconda3/envs/prison_population
