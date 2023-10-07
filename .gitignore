@@ -3,3 +3,5 @@
 Images/.DS_Store
 *.sublime-project
 .env
+data
+*__pycache__
