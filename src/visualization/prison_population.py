@@ -30,12 +30,11 @@ chart_studio.tools.set_credentials_file(
 
 ##Setting template
 pio.templates.default = "prt_template"
-
 plotly_config = config['plotly']['config']
 
 ##Reading in data
 df = pd.read_csv(
-    "data/processed/prison_population.csv",
+    f"{config['data']['clnFilePath']}prison_population.csv",
     usecols=["date", "population"],
     parse_dates=["date"],
 )
