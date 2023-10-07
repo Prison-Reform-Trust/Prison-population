@@ -1,0 +1,19 @@
+# File paths
+- data:
+    rawFilePath: data/raw/
+    clnFilePath: data/processed/
+    intFilePath: data/interim/
+
+- viz:
+    outPath: reports/figures/
+
+# Configurations
+- plotly:
+    config:
+        "scrollZoom": False
+        "displayModeBar": False
+        "editable": False
+        "displaylogo": False
+        "showAxisDragHandles": False
+        "responsive": False
+
