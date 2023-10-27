@@ -153,7 +153,8 @@ Outputting image and online charts
 """
 
 ##Image
-fig.write_image(os.path.join(config['viz']['outPath'], 'prison_population.eps'))
+# fig.write_image(os.path.join(config['viz']['outPath'], 'prison_population.eps'))
+fig.write_image(os.path.join(config['viz']['outPath'], 'prison_population.svg'))
 
 ##Online
 
