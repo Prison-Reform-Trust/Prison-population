@@ -53,7 +53,7 @@ xtick_vals = pd.date_range(start, end)
 filt = xtick_vals.is_month_start
 
 month_weeks = xtick_vals[filt].isocalendar().week
-month_weeks[0] = 1  # preventing week 1 from starting at the end of previous year
+month_weeks.iloc[0] = 1  # preventing week 1 from starting at the end of previous year
 
 ## Chart title
 title = textwrap.wrap("<b>HDC population in England and Wales</b>", width=65)
@@ -157,7 +157,8 @@ Outputting image and online charts
 """
 
 ##Image
-fig.write_image(os.path.join(config['viz']['outPath'], 'HDC_population.eps'))
+# fig.write_image(os.path.join(config['viz']['outPath'], 'HDC_population.eps'))
+fig.write_image(os.path.join(config['viz']['outPath'], 'HDC_population.svg'))
 
 ##Online
 
