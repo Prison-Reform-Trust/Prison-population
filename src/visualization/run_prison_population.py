@@ -6,4 +6,4 @@ prison_population
 female_population
 HDC_caseload
 
-#Highest prison population 88,167 end of November 2011
+#Highest prison population 88,225 13 October 2023
