@@ -40,19 +40,16 @@ df = pd.read_csv(
 )
 
 ##Filtering year range
-year = "2019"
-mask = df["date"].dt.year >= int(year)
-df_include = df[mask]
+df_include = df.query('date.dt.year >= 2020 & date.dt.year <= 2024')
 
 ##Calculating xaxis_tickvals
-start = datetime.datetime(2021, 1, 1)
-end = datetime.datetime(2021, 12, 31)
+start = datetime.datetime(2018, 1, 1)
+end = datetime.datetime(2018, 12, 31)
 
 xtick_vals = pd.date_range(start, end)
 filt = xtick_vals.is_month_start
 
 month_weeks = xtick_vals[filt].isocalendar().week
-month_weeks.iloc[0] = 1  # preventing week 1 from starting at the end of previous year
 
 ## Chart title
 title = textwrap.wrap("<b>Prison population in England and Wales</b>", width=65)
@@ -66,11 +63,11 @@ for year in df_include["date"].dt.year.unique():
     df_year = df_include[df_include["date"].dt.year == year]
 
     trace = go.Scatter(
-        x=df_year["date"].dt.strftime("Week %U"),
+        x=df_year["date"].dt.isocalendar().week,
         y=df_year["population"],
         mode="lines",
         connectgaps=True,
-        hovertext=df["date"].dt.strftime(" "),
+        hovertext=df_year["date"].dt.strftime("%d %b"),
         hovertemplate="<b>%{hovertext}</b><br>" + "%{y:,.0f}",
         name=str(year),
     )
@@ -83,10 +80,12 @@ fig.add_traces(trace_list)
 ##Edit the layout
 
 fig.update_layout(
+    margin=dict(l=64, b=75, r=64, pad=10),
     title="<br>".join(title),
     yaxis_dtick=2000,
     xaxis_tickvals=month_weeks,
     xaxis_ticktext=xtick_vals[filt].strftime("%b"),
+    hovermode='x'
 )
 
 ## Chart annotations
@@ -130,7 +129,7 @@ annotations.append(
     dict(
         xref="x",
         yref="paper",
-        x="Week 00",
+        x=1,
         y=1.04,
         align="left",
         xanchor="left",
@@ -144,7 +143,7 @@ annotations.append(
 fig.update_layout(annotations=annotations)
 
 fig.update_yaxes(range=[75900, 90100], nticks=6)
-fig.update_xaxes(range=[-1, 52])
+fig.update_xaxes(range=[1, 52])
 
 ##Plot file offline
 fig.show(config=plotly_config, renderer='browser')
