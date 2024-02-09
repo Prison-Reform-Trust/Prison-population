@@ -41,19 +41,16 @@ df = pd.read_csv(
 )
 
 ##Filtering year range
-year = "2020"
-mask = df["date"].dt.year >= int(year)
-df_include = df[mask]
+df_include = df.query('date.dt.year >= 2020 & date.dt.year <= 2024')
 
 ##Calculating xaxis_tickvals
-start = datetime.datetime(2022, 1, 1)
-end = datetime.datetime(2022, 12, 31)
+start = datetime.datetime(2018, 1, 1)
+end = datetime.datetime(2018, 12, 31)
 
 xtick_vals = pd.date_range(start, end)
 filt = xtick_vals.is_month_start
 
 month_weeks = xtick_vals[filt].isocalendar().week
-month_weeks.iloc[0] = 1  # preventing week 1 from starting at the end of previous year
 
 ## Chart title
 title = textwrap.wrap("<b>HDC population in England and Wales</b>", width=65)
@@ -67,11 +64,11 @@ for year in df_include["date"].dt.year.unique():
     df_year = df_include[df_include["date"].dt.year == year]
 
     trace = go.Scatter(
-        x=df_year["date"].dt.strftime("Week %U"),
+        x=df_year["date"].dt.isocalendar().week,
         y=df_year["hdc_pop"],
         mode="lines",
         connectgaps=True,
-        hovertext=df["date"].dt.strftime(" "),
+        hovertext=df_year["date"].dt.strftime("%d %b"),
         hovertemplate="<b>%{hovertext}</b><br>" + "%{y:,.0f}",
         name=str(year),
     )
@@ -87,24 +84,33 @@ fig.layout.template.layout.colorway = fig.layout.template.layout.colorway[-len(t
 ##Edit the layout
 
 fig.update_layout(
+    margin=dict(l=64, b=75, r=64, pad=10),
     title="<br>".join(title),
     xaxis_tickvals=month_weeks,
     xaxis_ticktext=xtick_vals[filt].strftime("%b"),
+    hovermode='x'
 )
 
 ## Chart annotations
 annotations = []
 
-y_list = [0, 0, 0, 0, 0]
+y_list = [0, -130, 0, 0, 0]
 
 # Adding trace annotations
 for i in range(0, len(trace_list)):
+    if i < 4:
+        # For the first four traces, use a fixed x position
+        x_position = 52
+    else:
+        # For the current year's trace, use the last x value position
+        x_position = trace_list[i].x[-1]
+
     annotations.append(
         dict(
             xref="x",
             yref="y",
-            x=trace_list[i].x[-1],
-            y=trace_list[i].y[-2] + y_list[i],
+            x=x_position,
+            y=trace_list[i].y[-1] + y_list[i],
             text=str(trace_list[i].name),
             xanchor="left",
             align="left",
@@ -133,7 +139,7 @@ annotations.append(
     dict(
         xref="x",
         yref="paper",
-        x="Week 00",
+        x=1,
         y=1.04,
         align="left",
         xanchor="left",
@@ -147,7 +153,7 @@ annotations.append(
 fig.update_layout(annotations=annotations)
 
 fig.update_yaxes(range=[0, 3550], nticks=10)
-fig.update_xaxes(range=[-1, 52])
+fig.update_xaxes(range=[1, 52])
 
 ##Plot file offline
 fig.show(config=plotly_config, renderer='browser')
