@@ -95,11 +95,18 @@ y_list = [0, 0, 0, 0, 0]
 
 # Adding trace annotations
 for i in range(0, len(trace_list)):
+    if i < 4:
+        # For the first four traces, use a fixed x position
+        x_position = 52
+    else:
+        # For the current year's trace, use the last x value position
+        x_position = trace_list[i].x[-1]
+
     annotations.append(
         dict(
             xref="x",
             yref="y",
-            x=trace_list[i].x[-1],
+            x=x_position,
             y=trace_list[i].y[-1] + y_list[i],
             text=str(trace_list[i].name),
             xanchor="left",
