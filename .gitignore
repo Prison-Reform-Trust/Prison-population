@@ -3,6 +3,6 @@
 Images/.DS_Store
 *.sublime-project
 .env
-.svg
+*.svg
 /data
 *__pycache__
