@@ -1,6 +1,6 @@
-name: prison_population
 channels:
   - defaults
+  - conda-forge
 dependencies:
   - notebook
   - cookiecutter
@@ -18,5 +18,4 @@ dependencies:
   - python-kaleido
   - chart-studio
   - ipywidgets
-  - plotly-geo
-prefix: /Users/alex/opt/miniconda3/envs/prison_population
+  - plotly::plotly-geo
