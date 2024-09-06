@@ -10,4 +10,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-#Highest prison population 88,225 13 October 2023
+#Highest prison population 88,521 6 September 2024
