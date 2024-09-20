@@ -152,7 +152,7 @@ annotations.append(
 # Adding annotations to layout
 fig.update_layout(annotations=annotations)
 
-fig.update_yaxes(range=[0, 3550], nticks=10)
+fig.update_yaxes(range=[0, 4050])
 fig.update_xaxes(range=[1, 52])
 
 ##Plot file offline
