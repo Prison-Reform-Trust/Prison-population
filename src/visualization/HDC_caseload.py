@@ -193,4 +193,4 @@ fig.update_layout(
     height=layout_atr.height,
 )
 
-# py.plot(fig, filename="HDC population E&W")
+py.plot(fig, filename="HDC population E&W")
