@@ -152,7 +152,7 @@ annotations.append(
 # Adding annotations to layout
 fig.update_layout(annotations=annotations)
 
-fig.update_yaxes(range=[0, 4050])
+fig.update_yaxes(range=[0, None])
 fig.update_xaxes(range=[1, 52])
 
 ##Plot file offline
@@ -193,4 +193,4 @@ fig.update_layout(
     height=layout_atr.height,
 )
 
-py.plot(fig, filename="HDC population E&W")
+# py.plot(fig, filename="HDC population E&W")
