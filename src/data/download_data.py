@@ -48,6 +48,7 @@ def download_files(url, year, path='data/raw/'):
             'application/msword',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         }
+        and "monthly" not in attachment.get('title', '').lower()  # Exclude "monthly" files
     ]
 
     # Define the full directory path with the year subfolder
