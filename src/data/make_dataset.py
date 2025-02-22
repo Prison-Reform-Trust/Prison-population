@@ -14,19 +14,26 @@ from src.data.utilities import read_config
 # Load config.yaml
 config = read_config()
 
+# Load logger
+logger = logging.getLogger(__name__)
+
 def extract_date_from_string(date_string: str) -> datetime | None:
     """Extracts a date from a string using regex and converts it to a datetime object.
     
     Args:
-        date_string (str): A string containing a date in the format '19 July 2024'.
+        date_string (str): A string containing a date in the format '19 July 2024' or with ordinal suffixes.
     
     Returns:
         datetime.date | None: Extracted date or None if no match is found.
     """
-    match = re.search(r"(\d{1,2} [A-Za-z]+ \d{4})", date_string)  # Looks for '19 July 2024'
+    match = re.search(r"(\d{1,2})(?:st|nd|rd|th)? ([A-Za-z]+) (\d{4})", date_string)  
     if match:
-        return datetime.strptime(match.group(1), "%d %B %Y").date()
-    return None
+        day, month, year = match.groups()
+        extracted_date = datetime.strptime(f"{day} {month} {year}", "%d %B %Y").date()
+        return extracted_date
+    else:
+        logger.warning(f"Failed to extract date from '{date_string}'")
+        return None
 
 def process_historic_file(df: pd.DataFrame) -> pd.DataFrame:
     """Processes historic format spreadsheets to match new format structure.
