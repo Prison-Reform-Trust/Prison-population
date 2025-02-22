@@ -214,6 +214,7 @@ def main(input_dir, output_dir, file_pattern) -> None:
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    logging.basicConfig(level=logging.INFO, format=log_fmt)
+    log_level = getattr(logging, os.getenv("LOG_LEVEL", "INFO").upper(), logging.INFO)
+    logging.basicConfig(level=log_level, format=log_fmt)
 
     main()
