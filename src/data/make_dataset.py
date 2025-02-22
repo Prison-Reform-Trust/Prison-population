@@ -55,12 +55,12 @@ def process_historic_file(df: pd.DataFrame) -> pd.DataFrame:
         df.loc[df["type"] == "Population", "group"] = "total"
         df.loc[df["type"] == "Population", "type"] = "prison"
 
-        # Step 2: Assign correct group values for male and female estate
-        df.loc[df["type"] == "Population in male estate", "group"] = "male"
-        df.loc[df["type"] == "Population in female estate", "group"] = "female"
+        # Step 2: Assign correct group values for male and female estate, handling variations
+        df.loc[df["type"].isin(["Population in male estate", "Male population"]), "group"] = "male"
+        df.loc[df["type"].isin(["Population in female estate", "Female population"]), "group"] = "female"
 
         # Step 3: Change type for male and female estate to 'prison'
-        df.loc[df["type"].isin(["Population in male estate", "Population in female estate"]), "type"] = "prison"
+        df.loc[df["type"].isin(["Population in male estate", "Population in female estate", "Male population", "Female population"]), "type"] = "prison"
         
         # Step 4: Map other types to their new format
         type_mapping = {
