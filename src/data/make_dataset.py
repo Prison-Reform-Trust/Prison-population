@@ -47,8 +47,20 @@ def process_historic_file(df: pd.DataFrame) -> pd.DataFrame:
     try:
         # Select relevant rows and columns
         selected_rows = list(range(7))  # First 7 rows contain relevant data
-        selected_cols = [2, 5]  # Adjust based on actual needed columns
-        df = df.iloc[selected_rows, selected_cols]
+
+        # If the dataframe has shape (17, 9), copy the HDC value from column 1 to the last column
+        if df.shape == (17, 9):
+            selected_cols = [2, 3, 5]
+            df = df.iloc[selected_rows, selected_cols]
+
+            hdc_value = df.iloc[-1, 1]  # Extract HDC value
+            df.iloc[-1, -1] = hdc_value  # Copy to last column
+            
+            df.drop(columns=[df.columns[1]], inplace=True)  # Drop the original HDC column
+            
+        else:
+            selected_cols = [2, 5]  # Adjust based on actual needed columns
+            df = df.iloc[selected_rows, selected_cols]
 
         # Extract date
         date = extract_date_from_string(df.iloc[0, 0])
@@ -148,7 +160,7 @@ def process_file(file_path: str) -> pd.DataFrame:
     try:
         df = pd.read_excel(file_path, engine="odf").dropna(how="all")
 
-        if df.shape == (18, 8):
+        if df.shape in [(18, 8), (17, 8), (17, 9)]:  # Historic formats
             return process_historic_file(df)
         elif df.shape == (25, 9):
             return process_new_file(df)
