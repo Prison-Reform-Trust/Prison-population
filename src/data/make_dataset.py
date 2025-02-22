@@ -188,7 +188,6 @@ def main(input_dir, output_dir, file_pattern) -> None:
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
-    logger = logging.getLogger(__name__)
     logger.info('Making final data set from raw data')
 
     file_paths = glob.glob(f"{input_dir}/**/{file_pattern}", recursive=True)
@@ -208,7 +207,7 @@ def main(input_dir, output_dir, file_pattern) -> None:
         date_range = datetime.today().strftime("%Y-%m-%d")  # Fallback if no valid dates
 
     # Generate filename with date range
-    save_filename = f"processed_{date_range}.csv"
+    save_filename = f"{date_range}.csv"
     save_path = Path(output_dir) / save_filename
 
     df.to_csv(save_path, index=False)
