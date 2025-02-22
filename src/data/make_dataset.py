@@ -35,11 +35,12 @@ def extract_date_from_string(date_string: str) -> datetime | None:
         logger.warning(f"Failed to extract date from '{date_string}'")
         return None
 
-def process_historic_file(df: pd.DataFrame) -> pd.DataFrame:
+def process_historic_file(df: pd.DataFrame, file_path: str) -> pd.DataFrame:
     """Processes historic format spreadsheets to match new format structure.
     
     Args:
         df (pd.DataFrame): DataFrame containing raw data.
+        file_path (str): Path to the file being processed.
     
     Returns:
         pd.DataFrame: Processed DataFrame with structured format.
@@ -65,7 +66,7 @@ def process_historic_file(df: pd.DataFrame) -> pd.DataFrame:
         # Extract date
         date = extract_date_from_string(df.iloc[0, 0])
         if date is None:
-            raise ValueError(f"Could not extract date from {df}")
+            raise ValueError(f"Could not extract date from {file_path}")
         
         # Rename columns for clarity
         df.columns = ["type", "group_value"]
@@ -99,18 +100,19 @@ def process_historic_file(df: pd.DataFrame) -> pd.DataFrame:
             .loc[:, ["date", "group", "type", "value"]]  # Reorder columns (keep all rows)
             .loc[4:]  # Keep rows from index 4 onwards (after dropping unwanted metadata)
         )
-
+        logger.info(f"Successfully processed file: {file_path}") # Log success
         return df
 
     except Exception as e:
-        logging.exception(f"Error processing historic file: {e}")
+        logger.exception(f"Error processing historic file {file_path}: {e}")
         return pd.DataFrame()  # Return empty DataFrame to avoid breaking concat
 
-def process_new_file(df: pd.DataFrame) -> pd.DataFrame:
+def process_new_file(df: pd.DataFrame, file_path: str) -> pd.DataFrame:
     """Processes new format spreadsheets into structured format.
 
     Args:
         df (pd.DataFrame): Raw data as DataFrame.
+        file_path (str): Path to the file being processed.
 
     Returns:
         pd.DataFrame: Processed DataFrame.
@@ -123,7 +125,7 @@ def process_new_file(df: pd.DataFrame) -> pd.DataFrame:
         # Extract date
         date = extract_date_from_string(df.iloc[0, 0])
         if date is None:
-            raise ValueError("Could not extract date")
+            raise ValueError(f"Could not extract date from {file_path}")
 
         df = (
             df.assign(date=date)
@@ -141,11 +143,11 @@ def process_new_file(df: pd.DataFrame) -> pd.DataFrame:
             .assign(value=lambda df: pd.to_numeric(df["value"], errors="coerce").astype("Int64"))
             .loc[:, ["date", "group", "type", "value"]]
         )
-
+        logger.info(f"Successfully processed file: {file_path}")  # Log success
         return df
 
     except Exception as e:
-        logging.exception(f"Error processing new file: {e}")
+        logger.exception(f"Error processing historic file {file_path}: {e}")
         return pd.DataFrame()  # Return empty DataFrame
 
 def process_file(file_path: str) -> pd.DataFrame:
@@ -161,9 +163,9 @@ def process_file(file_path: str) -> pd.DataFrame:
         df = pd.read_excel(file_path, engine="odf").dropna(how="all")
 
         if df.shape in [(18, 8), (17, 8), (17, 9)]:  # Historic formats
-            return process_historic_file(df)
+            return process_historic_file(df, file_path)
         elif df.shape == (25, 9):
-            return process_new_file(df)
+            return process_new_file(df, file_path)
         else:
             logging.warning(f"Skipping {file_path}: Unrecognized format {df.shape}")
             return pd.DataFrame()
