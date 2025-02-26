@@ -76,7 +76,7 @@ def generate_traces(df):
     return traces
 
 ## Generate annotations dynamically
-def generate_annotations(traces):
+def generate_annotations(traces, colorway):
     """Generates trace labels and source annotation."""
     annotations = [
         dict(
@@ -88,7 +88,7 @@ def generate_annotations(traces):
             xanchor="left",
             align="left",
             showarrow=False,
-            font_color=fig.layout.template.layout.colorway[i],
+            font_color=colorway[i],
             font_size=10,
         )
         for i, trace in enumerate(traces)
@@ -132,6 +132,9 @@ def create_chart(df, xaxis_tickvals, xaxis_ticktext, traces):
 
     title = textwrap.wrap("<b>Prison population in England and Wales</b>", width=65)
 
+    # Get colorway from template
+    colorway = pio.templates[pio.templates.default].layout.colorway
+
     fig.update_layout(
         margin=dict(l=64, b=75, r=64, pad=10),
         title="<br>".join(title),
@@ -139,7 +142,7 @@ def create_chart(df, xaxis_tickvals, xaxis_ticktext, traces):
         xaxis_tickvals=xaxis_tickvals,
         xaxis_ticktext=xaxis_ticktext,
         hovermode='x',
-        annotations=generate_annotations(traces),
+        annotations=generate_annotations(traces, colorway),  # Pass colorway
     )
 
     fig.update_yaxes(range=[75900, 90100], nticks=6)
