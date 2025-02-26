@@ -48,12 +48,20 @@ def filter_data(df):
 ## Calculate week numbers & month ticks
 def calculate_week_and_ticks(df):
     """Calculates relative week numbers and month tick positions."""
-    oldest_year = df["date"].dt.year.min()
-    df["week"] = ((df["date"] - pd.Timestamp(f"{oldest_year}-01-01")).dt.days // 7) + 1
-    df["month"] = df["date"].dt.month
+    
+    # Ensure we are working with datetime
+    df["date"] = pd.to_datetime(df["date"])
 
-    # First week number of each month
+    # Calculate week number relative to each year's January 1
+    df["week"] = (df["date"] - df["date"].dt.year.astype(str).apply(lambda y: pd.Timestamp(f"{y}-01-01"))).dt.days // 7 + 1
+
+    df["month"] = df["date"].dt.month
+    df["year"] = df["date"].dt.year  # Add year column for grouping
+
+    # Get first week number for each month
     month_weeks = df.groupby("month")["week"].first().tolist()
+    
+    # Get unique month names
     month_labels = df["date"].dt.strftime("%b").unique().tolist()
 
     return df, month_weeks, month_labels
