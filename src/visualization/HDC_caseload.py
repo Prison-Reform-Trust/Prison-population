@@ -15,7 +15,7 @@ import textwrap
 from dotenv import load_dotenv, find_dotenv
 
 #Local scripts
-import src.data.utilities as utils
+import src.utilities as utils
 import src.visualization.prt_theme as prt_theme
 
 ##Loading environment variables and config
