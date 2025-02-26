@@ -206,12 +206,19 @@ def main(input_dir, output_dir, file_pattern) -> None:
     else:
         date_range = datetime.today().strftime("%Y-%m-%d")  # Fallback if no valid dates
 
-    # Generate filename with date range
-    save_filename = f"{date_range}.csv"
+    save_filename = "processed_data.csv"
     save_path = Path(output_dir) / save_filename
 
     df.to_csv(save_path, index=False)
     logger.info(f"Processed data saved to {save_path}")
+
+    # Save date range in a separate log file
+    metadata_file = Path(output_dir) / "processed_dates.log"
+    with open(metadata_file, "a") as log_file:
+        log_file.write(f"{datetime.now().isoformat()} - Processed date range: {date_range}\n")
+
+    logger.info(f"Date range recorded in {metadata_file}")
+
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
