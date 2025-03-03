@@ -72,14 +72,25 @@ def generate_traces(df:pd.DataFrame) -> list:
     return traces
 
 ## Generate annotations dynamically
-def generate_annotations(traces, colorway, y_label):
-    """Generates trace labels and source annotation."""
+def generate_annotations(traces, colorway, y_label, y_offset_dict=None):
+    """
+    Generates trace labels and source annotation, allowing individual y-value adjustments.
+    
+    Parameters:
+        traces (list): Plotly trace objects.
+        colorway (list): Color scheme from Plotly template.
+        y_label (str): Y-axis label text.
+        y_offset_dict (dict, optional): A dictionary mapping trace names (years) to y-offsets.
+    """
+    if y_offset_dict is None:
+        y_offset_dict = {}
+
     annotations = [
         dict(
             xref="x",
             yref="y",
             x=53 if i < 4 else trace.x[-1],  # First 4 use fixed x, others use last x position
-            y=trace.y[-1],
+            y=trace.y[-1] + y_offset_dict.get(trace.name, 0),  # Apply y-offset if available
             text=trace.name,
             xanchor="left",
             align="left",
@@ -135,6 +146,7 @@ def create_chart(
     xaxis_range_vals=(1, 53),
     xaxis_nticks=None,
     yaxis_nticks=6,
+    y_offset_dict=None,
 ) -> go.Figure:
     """Creates the Plotly chart with adjustable parameters."""
 
@@ -153,7 +165,7 @@ def create_chart(
         xaxis_tickvals=xaxis_tickvals,
         xaxis_ticktext=xaxis_ticktext,
         hovermode="x",
-        annotations=generate_annotations(traces, colorway, y_label),
+        annotations=generate_annotations(traces, colorway, y_label, y_offset_dict),
     )
 
     # Apply axis settings
