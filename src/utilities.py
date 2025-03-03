@@ -158,14 +158,17 @@ def create_chart(
     # Get colorway from template
     colorway = pio.templates[pio.templates.default].layout.colorway
 
+    # Generate annotations with optional y_offset_dict
+    annotations = generate_annotations(traces, colorway, y_label, y_offset_dict)
+
     fig.update_layout(
         margin=margin,
         title="<br>".join(chart_title),
         yaxis_dtick=yaxis_dtick,
         xaxis_tickvals=xaxis_tickvals,
         xaxis_ticktext=xaxis_ticktext,
-        hovermode="x",
-        annotations=generate_annotations(traces, colorway, y_label, y_offset_dict),
+        hovermode='x',
+        annotations=annotations,
     )
 
     # Apply axis settings
