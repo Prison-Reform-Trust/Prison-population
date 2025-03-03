@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv, find_dotenv
 
-from src.data.utilities import read_config
+from src.utilities import read_config
 
 # Load config.yaml
 config = read_config()
