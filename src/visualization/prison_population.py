@@ -28,7 +28,7 @@ def main(title, y_label, filename):
     df_filtered = utils.filter_data(df, "total", "prison", 2021)
     df_final, xaxis_tickvals, xaxis_ticktext = utils.calculate_week_and_ticks(df_filtered)
     traces = utils.generate_traces(df_final)
-    fig = utils.create_chart(df_final, xaxis_tickvals, xaxis_ticktext, traces, title, y_label)
+    fig = utils.create_chart(df_final, xaxis_tickvals, xaxis_ticktext, traces, title, y_label, xaxis_range=(75900, 90100))
     utils.save_chart(fig, filename)
     
     return None
