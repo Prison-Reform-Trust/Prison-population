@@ -140,9 +140,9 @@ def create_chart(
     traces, 
     title: str, 
     y_label: str,
-    margin=dict(l=64, b=75, r=64, pad=10),
-    yaxis_dtick=2000,
-    xaxis_range=(75900, 90100),
+    xaxis_range:tuple,
+    margin=None,
+    yaxis_dtick=None,
     xaxis_range_vals=(1, 53),
     xaxis_nticks=None,
     yaxis_nticks=6,
@@ -162,9 +162,9 @@ def create_chart(
     annotations = generate_annotations(traces, colorway, y_label, y_offset_dict)
 
     fig.update_layout(
-        margin=margin,
+        margin=margin if margin else dict(l=64, b=75, r=64, pad=10),
         title="<br>".join(chart_title),
-        yaxis_dtick=yaxis_dtick,
+        yaxis_dtick=yaxis_dtick if yaxis_dtick else 2000,
         xaxis_tickvals=xaxis_tickvals,
         xaxis_ticktext=xaxis_ticktext,
         hovermode='x',
