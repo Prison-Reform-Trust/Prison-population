@@ -4,9 +4,26 @@
 import os
 import re
 import argparse
+import logging
 from concurrent.futures import ThreadPoolExecutor
 import requests
 from datetime import datetime
+
+from src.utilities import read_config
+
+config = read_config()
+
+# Configure logging
+def setup_logging(filename="download_log.log", log_path=config['data']['logsPath']):
+    """Sets up logging configuration."""
+    os.makedirs(log_path, exist_ok=True)  # Ensure the directory exists
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        filename=os.path.join(log_path, filename),  # Saves logs to a file
+        filemode="a"  # Appends to existing log file
+    )
 
 def extract_year_from_title(title):
     """Extracts the first 4-digit year found in the title."""
@@ -17,7 +34,7 @@ def get_api_urls(years=None):
     """Fetch all API URLs and filter by year if specified."""
     url = 'https://www.gov.uk/api/content/government/collections/prison-population-statistics'
     response = requests.get(url)
-    documents = response.json()['links']['documents']
+    documents = response.json().get('links', {}).get('documents', [])
 
     api_urls = []
     for document in documents:
@@ -35,8 +52,8 @@ def get_api_urls(years=None):
 
     return api_urls
 
-def download_files(url, year, path='data/raw/'):
-    """Downloads spreadsheet attachments from a given API URL."""
+def download_files(url, year, path=config['data']['rawFilePath']):
+    """Downloads spreadsheet attachments from a given API URL if not already downloaded."""
     response = requests.get(url)
     data = response.json()
     attachments = data['details']['attachments']
@@ -55,19 +72,33 @@ def download_files(url, year, path='data/raw/'):
     year_path = os.path.join(path, year)
     os.makedirs(year_path, exist_ok=True)  # Ensure the directory exists
 
+    files_downloaded = False  # Track if any files were downloaded
+    files_skipped = 0  # Track skipped files
+
     for spreadsheet_url in spreadsheet_attachments:
+        filename = os.path.join(year_path, os.path.basename(spreadsheet_url))
+
+        if os.path.exists(filename):
+            logging.info(f"Skipping {os.path.basename(filename)} (already downloaded).")
+            files_skipped += 1
+            continue  # Skip downloading this file
+
         # Make a GET request to download the spreadsheet file
         spreadsheet_response = requests.get(spreadsheet_url)
-        
-        # Extract the filename from the URL
-        filename = os.path.join(year_path, spreadsheet_url.split('/')[-1])
-        
+
         # Save the spreadsheet content to a local file
         with open(filename, 'wb') as file:
             file.write(spreadsheet_response.content)
-        
-        print(f"Downloaded file {os.path.basename(filename)} to {year_path}/")
-    print(f"Download complete for {year}!")
+
+        logging.info(f"Downloaded file {os.path.basename(filename)} to {year_path}/")
+        files_downloaded = True  # Mark that at least one file was downloaded
+
+    # Log completion message only once per year
+    if files_downloaded:
+        logging.info(f"Download complete for {year}!")
+    elif files_skipped == len(spreadsheet_attachments):  
+        # Only log this message once if all files were skipped
+        logging.info(f"All files for {year} were already downloaded. No new downloads.")
 
 def download_prison_population_data(years=None):
     """Fetches and downloads prison population statistics for specified years."""
@@ -84,6 +115,7 @@ def download_prison_population_data(years=None):
             executor.submit(download_files, api_url, year)
 
 if __name__ == "__main__":
+    setup_logging()
     parser = argparse.ArgumentParser(description="Download prison population statistics for specific years.")
     parser.add_argument(
         "years",

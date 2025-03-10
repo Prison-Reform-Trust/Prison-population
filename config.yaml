@@ -3,6 +3,7 @@
     rawFilePath: data/raw/
     clnFilePath: data/processed/
     intFilePath: data/interim/
+    logsPath: src/logs/
 
 - viz:
     outPath: reports/figures/
