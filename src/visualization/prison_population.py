@@ -25,7 +25,11 @@ chart_studio.tools.set_credentials_file(
 pio.templates.default = "prt_template"
 
 
-def main(chart_title, y_label, filename):
+def main(
+        chart_title="<b>Prison population in England and Wales</b>",
+        y_label="People in prison",
+        filename="prison_population"
+        ):
     df = utils.load_data(f"{config['data']['clnFilePath']}processed_data.csv")
     df_filtered = utils.filter_data(df, "total", "prison", 2021)
     df_final, xaxis_tickvals, xaxis_ticktext = utils.calculate_week_and_ticks(df_filtered)
@@ -38,7 +42,4 @@ def main(chart_title, y_label, filename):
 
 # Run script
 if __name__ == "__main__":
-    title = "<b>Prison population in England and Wales</b>"
-    y_label = "People in prison"
-    filename = "prison_population"
-    main(chart_title=title, y_label=y_label, filename=filename)
+    main()
