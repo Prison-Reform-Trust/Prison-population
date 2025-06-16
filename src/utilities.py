@@ -1,15 +1,18 @@
 """
 This script provides useful funcs to all other scripts
 """
+import logging
 import os
-import yaml
-import pandas as pd
-import plotly.graph_objs as go  # Offline plotting
-import chart_studio.plotly as py  # Online plotting
-import plotly.io as pio
 import textwrap
 
+import chart_studio.plotly as py  # Online plotting
+import pandas as pd
+import plotly.graph_objs as go  # Offline plotting
+import plotly.io as pio
+import yaml
+
 import src.visualization.prt_theme as prt_theme
+
 
 def read_config():
     # Read in config file
@@ -17,6 +20,20 @@ def read_config():
         open('config.yaml'),
             Loader=yaml.SafeLoader) for k, v in d.items()}
     return config
+
+
+# Configure logging
+def setup_logging(filename="download_log.log", log_path=read_config()['data']['logsPath']):
+    """Sets up logging configuration."""
+    os.makedirs(log_path, exist_ok=True)  # Ensure the directory exists
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        filename=os.path.join(log_path, filename),  # Saves logs to a file
+        filemode="a"  # Appends to existing log file
+    )
+
 
 ## Read data
 def load_data(filepath:str) -> pd.DataFrame:
