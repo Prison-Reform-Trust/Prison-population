@@ -10,22 +10,10 @@ from datetime import datetime
 
 import requests
 
-from src.utilities import read_config
+from src.utilities import read_config, setup_logging
 
 config = read_config()
-
-
-# Configure logging
-def setup_logging(filename="download_log.log", log_path=config['data']['logsPath']):
-    """Sets up logging configuration."""
-    os.makedirs(log_path, exist_ok=True)  # Ensure the directory exists
-
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-        filename=os.path.join(log_path, filename),  # Saves logs to a file
-        filemode="a"  # Appends to existing log file
-    )
+setup_logging()
 
 
 def extract_year_from_title(title):
@@ -109,7 +97,11 @@ def download_files(url, year, path=config['data']['rawFilePath']):
 def download_prison_population_data(years=None):
     """Fetches and downloads prison population statistics for specified years."""
     # Convert years to strings if given as integers
-    if years:
+    if years is not None:
+        if isinstance(years, int):
+            years = [years]
+        elif isinstance(years, str):
+            years = [years]
         years = [str(year) for year in years]
 
     # Get filtered API URLs
@@ -122,7 +114,6 @@ def download_prison_population_data(years=None):
 
 
 if __name__ == "__main__":
-    setup_logging()
     parser = argparse.ArgumentParser(description="Download prison population statistics for specific years.")
     parser.add_argument(
         "years",
