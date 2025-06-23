@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
+from src import utilities as utils
 from src.data import download_data, make_dataset, weekly_data_summary
 from src.visualization import (HDC_caseload, female_population,
                                prison_population)
@@ -20,6 +20,7 @@ def make_charts():
 
 
 def main():
+    utils.setup_logging(to_file=True)
     download_data_and_make_dataset()
     make_charts()
 
