@@ -1,30 +1,65 @@
 """
 This script provides useful funcs to all other scripts
 """
+import logging
 import os
-import yaml
+import textwrap
+
+import chart_studio.plotly as py  # Online plotting
 import pandas as pd
 import plotly.graph_objs as go  # Offline plotting
-import chart_studio.plotly as py  # Online plotting
 import plotly.io as pio
-import textwrap
+import yaml
 
 import src.visualization.prt_theme as prt_theme
 
+
 def read_config():
-    # Read in config file
+    """Read in config file"""
     config = {k: v for d in yaml.load(
-        open('config.yaml'),
-            Loader=yaml.SafeLoader) for k, v in d.items()}
+        open('config.yaml', encoding='utf-8'),
+        Loader=yaml.SafeLoader) for k, v in d.items()}
     return config
 
-## Read data
-def load_data(filepath:str) -> pd.DataFrame:
+
+def ensure_directory(path: str) -> None:
+    """Ensure a directory path exists."""
+    os.makedirs(path, exist_ok=True)
+
+
+def setup_logging(
+        to_file=None,
+        filename="download_log.log",
+        log_path=read_config()['data']['logsPath']
+        ) -> None:
+    """Sets up logging configuration."""
+    log_format = "%(asctime)s - %(levelname)s - %(message)s"
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+
+    # Remove all handlers if they exist (to avoid duplicate logs)
+    if logger.hasHandlers():
+        logger.handlers.clear()
+
+    # Always add console handler
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(logging.Formatter(log_format))
+    logger.addHandler(console_handler)
+
+    # Add file handler if requested
+    if to_file:
+        ensure_directory(log_path)
+        file_handler = logging.FileHandler(os.path.join(log_path, filename), mode="a")
+        file_handler.setFormatter(logging.Formatter(log_format))
+        logger.addHandler(file_handler)
+
+
+def load_data(filepath: str) -> pd.DataFrame:
     """Loads processed data from CSV."""
     return pd.read_csv(filepath, parse_dates=["date"])
 
-## Filter dataset
-def filter_data(df:pd.DataFrame, group:str, category:str, date:int) -> pd.DataFrame:
+
+def filter_data(df: pd.DataFrame, group: str, category: str, date: int) -> pd.DataFrame:
     """Filters dataset based on predefined conditions."""
     df_filtered = df[
         (df["group"] == group) &
@@ -33,10 +68,10 @@ def filter_data(df:pd.DataFrame, group:str, category:str, date:int) -> pd.DataFr
     ].copy()
     return df_filtered
 
-## Calculate week numbers & month ticks
-def calculate_week_and_ticks(df:pd.DataFrame) -> tuple:
+
+def calculate_week_and_ticks(df: pd.DataFrame) -> tuple:
     """Calculates relative week numbers and month tick positions."""
-    
+
     # Ensure we are working with datetime
     df["date"] = pd.to_datetime(df["date"])
 
@@ -48,14 +83,14 @@ def calculate_week_and_ticks(df:pd.DataFrame) -> tuple:
 
     # Get first week number for each month
     month_weeks = df.groupby("month")["week"].first().tolist()
-    
+
     # Get unique month names
     month_labels = df["date"].dt.strftime("%b").unique().tolist()
 
     return df, month_weeks, month_labels
 
-## Generate traces for Plotly
-def generate_traces(df:pd.DataFrame) -> list:
+
+def generate_traces(df: pd.DataFrame) -> list:
     """Generates Plotly traces for each year in dataset."""
     traces = [
         go.Scatter(
@@ -71,11 +106,11 @@ def generate_traces(df:pd.DataFrame) -> list:
     ]
     return traces
 
-## Generate annotations dynamically
+
 def generate_annotations(traces, colorway, y_label, y_offset_dict=None):
     """
     Generates trace labels and source annotation, allowing individual y-value adjustments.
-    
+
     Parameters:
         traces (list): Plotly trace objects.
         colorway (list): Color scheme from Plotly template.
@@ -132,13 +167,13 @@ def generate_annotations(traces, colorway, y_label, y_offset_dict=None):
 
     return annotations
 
-## Main function to create chart
+
 def create_chart(
-    df, 
-    xaxis_tickvals, 
-    xaxis_ticktext, 
-    traces, 
-    title: str, 
+    df,
+    xaxis_tickvals,
+    xaxis_ticktext,
+    traces,
+    title: str,
     y_label: str,
     xaxis_range:tuple,
     margin=None,
@@ -177,7 +212,7 @@ def create_chart(
 
     return fig
 
-## Save chart (offline and online)
+
 def save_chart(fig, filename):
     """Saves the chart as an image and uploads it online."""
     config = read_config() # Read in config file

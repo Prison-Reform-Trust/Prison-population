@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-import click
-import logging
 import glob
-import pandas as pd
+import logging
 import os
 import re
 from datetime import datetime
 from pathlib import Path
-from dotenv import load_dotenv, find_dotenv
+
+import click
+import pandas as pd
+from dotenv import find_dotenv, load_dotenv
 
 from src.utilities import read_config
 
@@ -178,13 +179,17 @@ def process_file(file_path: str) -> pd.DataFrame:
 DEFAULT_INPUT_DIR = config["data"]["rawFilePath"]
 DEFAULT_OUTPUT_DIR = config["data"]["clnFilePath"]
 
+"""
+Temporarily removing CLI options for direct function call.
 @click.command()
 @click.option('--input_dir', default=DEFAULT_INPUT_DIR, type=click.Path(exists=True),
             help="Directory containing raw data files.")
 @click.option('--output_dir', default=DEFAULT_OUTPUT_DIR, type=click.Path(),
             help="Directory to save processed data.")
 @click.option("--file-pattern", default="*.ods", help="File pattern to match.")
-def main(input_dir, output_dir, file_pattern) -> None:
+"""
+
+def main(input_dir=DEFAULT_INPUT_DIR, output_dir=DEFAULT_OUTPUT_DIR, file_pattern="*.ods") -> None:
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
@@ -210,14 +215,14 @@ def main(input_dir, output_dir, file_pattern) -> None:
     save_path = Path(output_dir) / save_filename
 
     df.to_csv(save_path, index=False)
-    logger.info(f"Processed data saved to {save_path}")
+    logger.info("Processed data saved to %s", save_path)
 
     # Save date range in a separate log file
     metadata_file = Path(output_dir) / "processed_dates.log"
-    with open(metadata_file, "a") as log_file:
+    with open(metadata_file, "a", encoding="utf-8") as log_file:
         log_file.write(f"{datetime.now().isoformat()} - Processed date range: {date_range}\n")
 
-    logger.info(f"Date range recorded in {metadata_file}")
+    logger.info("Date range recorded in %s", {metadata_file})
 
 
 if __name__ == '__main__':

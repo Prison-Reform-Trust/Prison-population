@@ -1,23 +1,32 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import argparse
+import logging
 import os
 import re
-import argparse
 from concurrent.futures import ThreadPoolExecutor
-import requests
 from datetime import datetime
+
+import requests
+
+from src.utilities import read_config, setup_logging
+
+config = read_config()
+setup_logging()
+
 
 def extract_year_from_title(title):
     """Extracts the first 4-digit year found in the title."""
     match = re.search(r'\b(20\d{2})\b', title)
     return match.group(1) if match else None
 
+
 def get_api_urls(years=None):
     """Fetch all API URLs and filter by year if specified."""
     url = 'https://www.gov.uk/api/content/government/collections/prison-population-statistics'
-    response = requests.get(url)
-    documents = response.json()['links']['documents']
+    response = requests.get(url, timeout=10)
+    documents = response.json().get('links', {}).get('documents', [])
 
     api_urls = []
     for document in documents:
@@ -35,9 +44,10 @@ def get_api_urls(years=None):
 
     return api_urls
 
-def download_files(url, year, path='data/raw/'):
-    """Downloads spreadsheet attachments from a given API URL."""
-    response = requests.get(url)
+
+def download_files(url, year, path=config['data']['rawFilePath']):
+    """Downloads spreadsheet attachments from a given API URL if not already downloaded."""
+    response = requests.get(url, timeout=10)
     data = response.json()
     attachments = data['details']['attachments']
 
@@ -55,24 +65,43 @@ def download_files(url, year, path='data/raw/'):
     year_path = os.path.join(path, year)
     os.makedirs(year_path, exist_ok=True)  # Ensure the directory exists
 
+    files_downloaded = False  # Track if any files were downloaded
+    files_skipped = 0  # Track skipped files
+
     for spreadsheet_url in spreadsheet_attachments:
+        filename = os.path.join(year_path, os.path.basename(spreadsheet_url))
+
+        if os.path.exists(filename):
+            logging.info("Skipping %s (already downloaded).", os.path.basename(filename))
+            files_skipped += 1
+            continue  # Skip downloading this file
+
         # Make a GET request to download the spreadsheet file
-        spreadsheet_response = requests.get(spreadsheet_url)
-        
-        # Extract the filename from the URL
-        filename = os.path.join(year_path, spreadsheet_url.split('/')[-1])
-        
+        spreadsheet_response = requests.get(spreadsheet_url, timeout=10)
+
         # Save the spreadsheet content to a local file
         with open(filename, 'wb') as file:
             file.write(spreadsheet_response.content)
-        
-        print(f"Downloaded file {os.path.basename(filename)} to {year_path}/")
-    print(f"Download complete for {year}!")
+
+        logging.info("Downloaded file %s to %s/", os.path.basename(filename), year_path)
+        files_downloaded = True  # Mark that at least one file was downloaded
+
+    # Log completion message only once per year
+    if files_downloaded:
+        logging.info("Download complete for %s!", year)
+    elif files_skipped == len(spreadsheet_attachments):
+        # Only log this message once if all files were skipped
+        logging.info("All files for %s were already downloaded. No new downloads.", year)
+
 
 def download_prison_population_data(years=None):
     """Fetches and downloads prison population statistics for specified years."""
     # Convert years to strings if given as integers
-    if years:
+    if years is not None:
+        if isinstance(years, int):
+            years = [years]
+        elif isinstance(years, str):
+            years = [years]
         years = [str(year) for year in years]
 
     # Get filtered API URLs
@@ -82,6 +111,7 @@ def download_prison_population_data(years=None):
     with ThreadPoolExecutor() as executor:
         for api_url, year in api_urls_with_years:
             executor.submit(download_files, api_url, year)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Download prison population statistics for specific years.")
