@@ -15,10 +15,10 @@ import src.visualization.prt_theme as prt_theme
 
 
 def read_config():
-    # Read in config file
+    """Read in config file"""
     config = {k: v for d in yaml.load(
-        open('config.yaml'),
-            Loader=yaml.SafeLoader) for k, v in d.items()}
+        open('config.yaml', encoding='utf-8'),
+        Loader=yaml.SafeLoader) for k, v in d.items()}
     return config
 
 
@@ -36,12 +36,12 @@ def setup_logging(filename="download_log.log", log_path=read_config()['data']['l
 
 
 ## Read data
-def load_data(filepath:str) -> pd.DataFrame:
+def load_data(filepath: str) -> pd.DataFrame:
     """Loads processed data from CSV."""
     return pd.read_csv(filepath, parse_dates=["date"])
 
-## Filter dataset
-def filter_data(df:pd.DataFrame, group:str, category:str, date:int) -> pd.DataFrame:
+
+def filter_data(df: pd.DataFrame, group: str, category: str, date: int) -> pd.DataFrame:
     """Filters dataset based on predefined conditions."""
     df_filtered = df[
         (df["group"] == group) &
@@ -50,10 +50,10 @@ def filter_data(df:pd.DataFrame, group:str, category:str, date:int) -> pd.DataFr
     ].copy()
     return df_filtered
 
-## Calculate week numbers & month ticks
-def calculate_week_and_ticks(df:pd.DataFrame) -> tuple:
+
+def calculate_week_and_ticks(df: pd.DataFrame) -> tuple:
     """Calculates relative week numbers and month tick positions."""
-    
+
     # Ensure we are working with datetime
     df["date"] = pd.to_datetime(df["date"])
 
@@ -65,14 +65,14 @@ def calculate_week_and_ticks(df:pd.DataFrame) -> tuple:
 
     # Get first week number for each month
     month_weeks = df.groupby("month")["week"].first().tolist()
-    
+
     # Get unique month names
     month_labels = df["date"].dt.strftime("%b").unique().tolist()
 
     return df, month_weeks, month_labels
 
-## Generate traces for Plotly
-def generate_traces(df:pd.DataFrame) -> list:
+
+def generate_traces(df: pd.DataFrame) -> list:
     """Generates Plotly traces for each year in dataset."""
     traces = [
         go.Scatter(
@@ -88,11 +88,11 @@ def generate_traces(df:pd.DataFrame) -> list:
     ]
     return traces
 
-## Generate annotations dynamically
+
 def generate_annotations(traces, colorway, y_label, y_offset_dict=None):
     """
     Generates trace labels and source annotation, allowing individual y-value adjustments.
-    
+
     Parameters:
         traces (list): Plotly trace objects.
         colorway (list): Color scheme from Plotly template.
@@ -149,13 +149,13 @@ def generate_annotations(traces, colorway, y_label, y_offset_dict=None):
 
     return annotations
 
-## Main function to create chart
+
 def create_chart(
-    df, 
-    xaxis_tickvals, 
-    xaxis_ticktext, 
-    traces, 
-    title: str, 
+    df,
+    xaxis_tickvals,
+    xaxis_ticktext,
+    traces,
+    title: str,
     y_label: str,
     xaxis_range:tuple,
     margin=None,
@@ -194,7 +194,7 @@ def create_chart(
 
     return fig
 
-## Save chart (offline and online)
+
 def save_chart(fig, filename):
     """Saves the chart as an image and uploads it online."""
     config = read_config() # Read in config file
