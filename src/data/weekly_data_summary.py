@@ -118,4 +118,3 @@ if __name__ == "__main__":
     print(operational_capacity)
     print("\nHDC caseload:")
     print(hdc)
-
