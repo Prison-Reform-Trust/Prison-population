@@ -22,20 +22,38 @@ def read_config():
     return config
 
 
-# Configure logging
-def setup_logging(filename="download_log.log", log_path=read_config()['data']['logsPath']):
+def ensure_directory(path: str) -> None:
+    """Ensure a directory path exists."""
+    os.makedirs(path, exist_ok=True)
+
+
+def setup_logging(
+        to_file=None,
+        filename="download_log.log",
+        log_path=read_config()['data']['logsPath']
+        ) -> None:
     """Sets up logging configuration."""
-    os.makedirs(log_path, exist_ok=True)  # Ensure the directory exists
+    log_format = "%(asctime)s - %(levelname)s - %(message)s"
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
 
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-        filename=os.path.join(log_path, filename),  # Saves logs to a file
-        filemode="a"  # Appends to existing log file
-    )
+    # Remove all handlers if they exist (to avoid duplicate logs)
+    if logger.hasHandlers():
+        logger.handlers.clear()
+
+    # Always add console handler
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(logging.Formatter(log_format))
+    logger.addHandler(console_handler)
+
+    # Add file handler if requested
+    if to_file:
+        ensure_directory(log_path)
+        file_handler = logging.FileHandler(os.path.join(log_path, filename), mode="a")
+        file_handler.setFormatter(logging.Formatter(log_format))
+        logger.addHandler(file_handler)
 
 
-## Read data
 def load_data(filepath: str) -> pd.DataFrame:
     """Loads processed data from CSV."""
     return pd.read_csv(filepath, parse_dates=["date"])
