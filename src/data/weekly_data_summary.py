@@ -1,10 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 """
 A script to process and filter weekly data for prison population, operational capacity,
 and HDC caseload, ready for inclusion in weekly reports.
 This script loads the data from a CSV file, filters it to include only the most recent two weeks.
 """
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 import pandas as pd
 

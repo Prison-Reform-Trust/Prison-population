@@ -1,7 +1,10 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 #Custom plotly template for all charts in this project
 
-import plotly.io as pio
 import plotly.graph_objs as go
+import plotly.io as pio
 
 #PRT standard template
 pio.templates["prt_template"] = go.layout.Template(

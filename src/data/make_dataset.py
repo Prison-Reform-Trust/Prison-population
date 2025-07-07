@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import glob
 import logging
@@ -6,9 +7,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-import click
 import pandas as pd
-from dotenv import find_dotenv, load_dotenv
 
 from src.utilities import read_config
 
