@@ -4,7 +4,7 @@
 from src import utilities as utils
 from src.data import download_data, make_dataset, weekly_data_summary
 from src.visualization import (HDC_caseload, female_population,
-                               prison_population)
+                               operational_capacity, prison_population)
 
 
 def download_data_and_make_dataset():
@@ -17,6 +17,7 @@ def make_charts():
     prison_population.main()
     female_population.main()
     HDC_caseload.main()
+    operational_capacity.main()
 
 
 def main():
