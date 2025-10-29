@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+'''
+This script downloads weekly prison population data from the Ministry of Justice website,
+processes it, and generates charts visualizing various aspects of the prison population
+in England and Wales.
+'''
 
 from src import utilities as utils
 from src.data import download_data, make_dataset, weekly_data_summary
