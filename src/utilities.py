@@ -24,6 +24,9 @@ def read_config():
     return config
 
 
+CONFIG = read_config()
+
+
 def ensure_directory(path: str) -> None:
     """Ensure a directory path exists."""
     os.makedirs(path, exist_ok=True)
@@ -32,7 +35,7 @@ def ensure_directory(path: str) -> None:
 def setup_logging(
         to_file=None,
         filename="download_log.log",
-        log_path=read_config()['data']['logsPath']
+        log_path=CONFIG['data']['logsPath']
         ) -> None:
     """Sets up logging configuration."""
     log_format = "%(asctime)s - %(levelname)s - %(message)s"
@@ -217,8 +220,8 @@ def create_chart(
 
 def save_chart(fig, filename):
     """Saves the chart as an image and uploads it online."""
-    config = read_config() # Read in config file
-    fig.write_image(os.path.join(config['viz']['outPath'], f'{filename}.svg'))
+
+    fig.write_image(os.path.join(CONFIG['viz']['outPath'], f'{filename}.svg'))
 
     fig.layout.images = [
         dict(
