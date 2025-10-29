@@ -173,6 +173,30 @@ def calculate_week_and_ticks(df: pd.DataFrame) -> tuple:
     return df, month_weeks, month_labels
 
 
+def load_and_process_data(group: str, category: str, date: int) -> tuple[pd.DataFrame, list[int], list[str]]:
+    """Loads data and applies filtering and week calculations, ready for plotting.
+    Parameters:
+        group (str): The group to filter by (e.g., 'total', 'female').
+        category (str): The category to filter by (e.g., 'prison', 'hdc').
+        date (int): The year threshold to filter from (e.g., 2021). Only data from this year onwards will be included.
+    Returns:
+        tuple: (df_with_weeks, month_tick_positions, month_tick_labels)
+            - df_with_weeks (pd.DataFrame): Filtered dataframe with week numbers.
+            - month_tick_positions (list): List of week numbers for month ticks.
+            - month_tick_labels (list): List of month labels corresponding to tick positions.
+    """
+    data_path = os.path.join(CONFIG['data']['clnFilePath'], 'processed_data.csv')
+    df_raw = load_data(data_path)
+
+    # Filter by group, category, and date
+    df_filtered_by_criteria = filter_data(df_raw, group, category, date)
+
+    # Calculate week numbers and tick positions
+    df_with_weeks, month_tick_positions, month_tick_labels = calculate_week_and_ticks(df_filtered_by_criteria)
+
+    return df_with_weeks, month_tick_positions, month_tick_labels
+
+
 def generate_traces(df: pd.DataFrame) -> list:
     """Generates Plotly traces for each year in dataset."""
     traces = [
