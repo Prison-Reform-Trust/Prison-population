@@ -275,14 +275,13 @@ def generate_annotations(traces, colorway, y_label, y_offset_dict=None):
     return annotations
 
 
-def create_chart(
-    df,
+def create_chart_figure(
     xaxis_tickvals,
     xaxis_ticktext,
     traces,
     title: str,
     y_label: str,
-    xaxis_range:tuple,
+    yaxis_range: tuple,
     margin=None,
     yaxis_dtick=None,
     xaxis_range_vals=(1, 53),
@@ -290,7 +289,29 @@ def create_chart(
     yaxis_nticks=6,
     y_offset_dict=None,
 ) -> go.Figure:
-    """Creates the Plotly chart with adjustable parameters."""
+    """
+    Creates a Plotly figure from processed data components.
+
+    This function handles only the chart creation - it takes already
+    processed data (traces, tick values) and creates the visual chart.
+
+    Parameters:
+        xaxis_tickvals: X-axis tick positions
+        xaxis_ticktext: X-axis tick labels
+        traces: Plotly trace objects
+        title (str): Chart title
+        y_label (str): Y-axis label
+        yaxis_range (tuple): Y-axis range (min, max)
+        margin (dict, optional): Chart margins
+        yaxis_dtick (int, optional): Y-axis tick interval
+        xaxis_range_vals (tuple, optional): X-axis range, defaults to (1, 53)
+        xaxis_nticks (int, optional): Number of x-axis ticks
+        yaxis_nticks (int, optional): Number of y-axis ticks, defaults to 6
+        y_offset_dict (dict, optional): Year-specific y-offset adjustments for labels
+
+    Returns:
+        go.Figure: The created Plotly figure
+    """
 
     fig = go.Figure(traces)
 
@@ -314,7 +335,7 @@ def create_chart(
     )
 
     # Apply axis settings
-    fig.update_yaxes(range=xaxis_range, nticks=yaxis_nticks)
+    fig.update_yaxes(range=yaxis_range, nticks=yaxis_nticks)
     fig.update_xaxes(range=xaxis_range_vals, nticks=xaxis_nticks)
 
     return fig
