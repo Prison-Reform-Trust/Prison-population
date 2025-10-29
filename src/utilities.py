@@ -367,3 +367,65 @@ def save_chart(fig, filename):
     )
 
     py.plot(fig, filename=filename)
+
+
+def generate_and_save_chart(
+    group: str,
+    category: str, 
+    start_year: int,
+    chart_title: str,
+    y_label: str,
+    filename: str,
+    yaxis_range: tuple | None = None,
+    margin: dict | None = None,
+    yaxis_dtick: int | None = None,
+    xaxis_range_vals: tuple = (1, 53),
+    xaxis_nticks: int | None = None,
+    yaxis_nticks: int = 6,
+    y_offset_dict: dict | None = None
+) -> None:
+    """
+    Complete workflow: loads data, processes it, creates chart, and saves it.
+
+    This function handles the entire pipeline from raw data parameters
+    to saved chart file.
+
+    Parameters:
+        group (str): Data group to filter by (e.g., 'total', 'female')
+        category (str): Data category to filter by (e.g., 'prison', 'hdc', 'operational_capacity')
+        start_year (int): Starting year for data filtering
+        chart_title (str): Title for the chart
+        y_label (str): Y-axis label
+        filename (str): Output filename for the chart
+        yaxis_range (tuple, optional): Y-axis range (min, max)
+        margin (dict, optional): Chart margins
+        yaxis_dtick (int, optional): Y-axis tick interval
+        xaxis_range_vals (tuple, optional): X-axis range, defaults to (1, 53)
+        xaxis_nticks (int, optional): Number of x-axis ticks
+        yaxis_nticks (int, optional): Number of y-axis ticks, defaults to 6
+        y_offset_dict (dict, optional): Year-specific y-offset adjustments for labels
+    """
+    # Load and process data
+    df_with_weeks, month_tick_positions, month_tick_labels = load_and_process_data(group, category, start_year)
+
+    # Generate plotting traces
+    plot_traces = generate_traces(df_with_weeks)
+
+    # Create chart using the renamed function
+    fig = create_chart_figure(
+        xaxis_tickvals=month_tick_positions,
+        xaxis_ticktext=month_tick_labels,
+        traces=plot_traces,
+        title=chart_title,
+        y_label=y_label,
+        yaxis_range=yaxis_range or (0, 100000),  # Provide default range if None
+        margin=margin,
+        yaxis_dtick=yaxis_dtick,
+        xaxis_range_vals=xaxis_range_vals,
+        xaxis_nticks=xaxis_nticks,
+        yaxis_nticks=yaxis_nticks,
+        y_offset_dict=y_offset_dict
+    )
+
+    save_chart(fig, filename)
+    return None
