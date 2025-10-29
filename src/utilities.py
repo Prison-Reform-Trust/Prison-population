@@ -64,13 +64,91 @@ def load_data(filepath: str) -> pd.DataFrame:
     return pd.read_csv(filepath, parse_dates=["date"])
 
 
+def _validate_required_columns(df: pd.DataFrame) -> None:
+    """Private helper function to validate required columns exist in dataframe.
+
+    Parameters:
+        df (pd.DataFrame): The input dataframe to validate.
+
+    Raises:
+        KeyError: If required columns are missing from the dataframe.
+    """
+    required_columns = ["group", "type", "date"]
+    missing_columns = [col for col in required_columns if col not in df.columns]
+    if missing_columns:
+        raise KeyError(f"Missing required columns: {missing_columns}")
+
+
+def get_filter_options(df: pd.DataFrame) -> dict:
+    """Returns available filter options for the dataset.
+    Parameters:
+        df (pd.DataFrame): The input dataframe.
+    Returns:
+        dict: Dictionary containing valid groups, categories, and date range.
+    Raises:
+        KeyError: If required columns are missing from the dataframe.
+    """
+    _validate_required_columns(df)
+
+    return {
+        "groups": sorted(df["group"].unique().tolist()),
+        "categories": sorted(df["type"].unique().tolist()),
+        "date_range": (df["date"].dt.year.min(), df["date"].dt.year.max())
+    }
+
+
 def filter_data(df: pd.DataFrame, group: str, category: str, date: int) -> pd.DataFrame:
-    """Filters dataset based on predefined conditions."""
+    """Filters dataset based on predefined conditions.
+    Parameters:
+        df (pd.DataFrame): The input dataframe.
+        group (str): The group to filter by (e.g., 'total', 'female').
+        category (str): The category to filter by (e.g., 'prison', 'hdc').
+        date (int): The year threshold to filter from (e.g., 2021). Only data from this year onwards will be included.
+    Returns:
+        pd.DataFrame: The filtered dataframe.
+    Raises:
+        ValueError: If invalid parameters are provided or if no data matches the criteria.
+        KeyError: If required columns are missing from the dataframe.
+    """
+    # Validate required columns exist (this also validates columns for get_filter_options)
+    _validate_required_columns(df)
+
+    # Get valid options using helper function (no need to validate columns again)
+    options = get_filter_options(df)
+
+    # Validate group parameter
+    if group not in options["groups"]:
+        raise ValueError(f"Invalid group '{group}'. Valid options: {options['groups']}")
+
+    # Validate category parameter
+    if category not in options["categories"]:
+        raise ValueError(f"Invalid category '{category}'. Valid options: {options['categories']}")
+
+    # Validate date parameter
+    min_year, max_year = options["date_range"]
+    if not isinstance(date, int) or date < min_year or date > max_year:
+        raise ValueError(f"Invalid date '{date}'. Must be an integer between {min_year} and {max_year}")
+
+    # Apply filters
     df_filtered = df[
         (df["group"] == group) &
         (df["type"] == category) &
         (df["date"].dt.year >= date)
     ].copy()
+
+    # Check if filtering resulted in empty dataframe
+    if df_filtered.empty:
+        logging.warning("No data found for group='%s', category='%s', date>=%s", group, category, date)
+        logging.info("Available combinations:")
+        combinations = df.groupby(["group", "type"])["date"].agg(["min", "max"]).reset_index()
+        combinations["min_year"] = pd.to_datetime(combinations["min"]).dt.year
+        combinations["max_year"] = pd.to_datetime(combinations["max"]).dt.year
+        for _, row in combinations.iterrows():
+            logging.info(
+                "  group='%s', type='%s', years=%s-%s",
+                row['group'], row['type'], row['min_year'], row['max_year']
+            )
+
     return df_filtered
 
 
