@@ -24,6 +24,9 @@ def read_config():
     return config
 
 
+CONFIG = read_config()
+
+
 def ensure_directory(path: str) -> None:
     """Ensure a directory path exists."""
     os.makedirs(path, exist_ok=True)
@@ -32,7 +35,7 @@ def ensure_directory(path: str) -> None:
 def setup_logging(
         to_file=None,
         filename="download_log.log",
-        log_path=read_config()['data']['logsPath']
+        log_path=CONFIG['data']['logsPath']
         ) -> None:
     """Sets up logging configuration."""
     log_format = "%(asctime)s - %(levelname)s - %(message)s"
@@ -61,13 +64,91 @@ def load_data(filepath: str) -> pd.DataFrame:
     return pd.read_csv(filepath, parse_dates=["date"])
 
 
+def _validate_required_columns(df: pd.DataFrame) -> None:
+    """Private helper function to validate required columns exist in dataframe.
+
+    Parameters:
+        df (pd.DataFrame): The input dataframe to validate.
+
+    Raises:
+        KeyError: If required columns are missing from the dataframe.
+    """
+    required_columns = ["group", "type", "date"]
+    missing_columns = [col for col in required_columns if col not in df.columns]
+    if missing_columns:
+        raise KeyError(f"Missing required columns: {missing_columns}")
+
+
+def get_filter_options(df: pd.DataFrame) -> dict:
+    """Returns available filter options for the dataset.
+    Parameters:
+        df (pd.DataFrame): The input dataframe.
+    Returns:
+        dict: Dictionary containing valid groups, categories, and date range.
+    Raises:
+        KeyError: If required columns are missing from the dataframe.
+    """
+    _validate_required_columns(df)
+
+    return {
+        "groups": sorted(df["group"].unique().tolist()),
+        "categories": sorted(df["type"].unique().tolist()),
+        "date_range": (df["date"].dt.year.min(), df["date"].dt.year.max())
+    }
+
+
 def filter_data(df: pd.DataFrame, group: str, category: str, date: int) -> pd.DataFrame:
-    """Filters dataset based on predefined conditions."""
+    """Filters dataset based on predefined conditions.
+    Parameters:
+        df (pd.DataFrame): The input dataframe.
+        group (str): The group to filter by (e.g., 'total', 'female').
+        category (str): The category to filter by (e.g., 'prison', 'hdc').
+        date (int): The year threshold to filter from (e.g., 2021). Only data from this year onwards will be included.
+    Returns:
+        pd.DataFrame: The filtered dataframe.
+    Raises:
+        ValueError: If invalid parameters are provided or if no data matches the criteria.
+        KeyError: If required columns are missing from the dataframe.
+    """
+    # Validate required columns exist (this also validates columns for get_filter_options)
+    _validate_required_columns(df)
+
+    # Get valid options using helper function (no need to validate columns again)
+    options = get_filter_options(df)
+
+    # Validate group parameter
+    if group not in options["groups"]:
+        raise ValueError(f"Invalid group '{group}'. Valid options: {options['groups']}")
+
+    # Validate category parameter
+    if category not in options["categories"]:
+        raise ValueError(f"Invalid category '{category}'. Valid options: {options['categories']}")
+
+    # Validate date parameter
+    min_year, max_year = options["date_range"]
+    if not isinstance(date, int) or date < min_year or date > max_year:
+        raise ValueError(f"Invalid date '{date}'. Must be an integer between {min_year} and {max_year}")
+
+    # Apply filters
     df_filtered = df[
         (df["group"] == group) &
         (df["type"] == category) &
         (df["date"].dt.year >= date)
     ].copy()
+
+    # Check if filtering resulted in empty dataframe
+    if df_filtered.empty:
+        logging.warning("No data found for group='%s', category='%s', date>=%s", group, category, date)
+        logging.info("Available combinations:")
+        combinations = df.groupby(["group", "type"])["date"].agg(["min", "max"]).reset_index()
+        combinations["min_year"] = pd.to_datetime(combinations["min"]).dt.year
+        combinations["max_year"] = pd.to_datetime(combinations["max"]).dt.year
+        for _, row in combinations.iterrows():
+            logging.info(
+                "  group='%s', type='%s', years=%s-%s",
+                row['group'], row['type'], row['min_year'], row['max_year']
+            )
+
     return df_filtered
 
 
@@ -90,6 +171,30 @@ def calculate_week_and_ticks(df: pd.DataFrame) -> tuple:
     month_labels = df["date"].dt.strftime("%b").unique().tolist()
 
     return df, month_weeks, month_labels
+
+
+def load_and_process_data(group: str, category: str, date: int) -> tuple[pd.DataFrame, list[int], list[str]]:
+    """Loads data and applies filtering and week calculations, ready for plotting.
+    Parameters:
+        group (str): The group to filter by (e.g., 'total', 'female').
+        category (str): The category to filter by (e.g., 'prison', 'hdc').
+        date (int): The year threshold to filter from (e.g., 2021). Only data from this year onwards will be included.
+    Returns:
+        tuple: (df_with_weeks, month_tick_positions, month_tick_labels)
+            - df_with_weeks (pd.DataFrame): Filtered dataframe with week numbers.
+            - month_tick_positions (list): List of week numbers for month ticks.
+            - month_tick_labels (list): List of month labels corresponding to tick positions.
+    """
+    data_path = os.path.join(CONFIG['data']['clnFilePath'], 'processed_data.csv')
+    df_raw = load_data(data_path)
+
+    # Filter by group, category, and date
+    df_filtered_by_criteria = filter_data(df_raw, group, category, date)
+
+    # Calculate week numbers and tick positions
+    df_with_weeks, month_tick_positions, month_tick_labels = calculate_week_and_ticks(df_filtered_by_criteria)
+
+    return df_with_weeks, month_tick_positions, month_tick_labels
 
 
 def generate_traces(df: pd.DataFrame) -> list:
@@ -170,14 +275,13 @@ def generate_annotations(traces, colorway, y_label, y_offset_dict=None):
     return annotations
 
 
-def create_chart(
-    df,
+def create_chart_figure(
     xaxis_tickvals,
     xaxis_ticktext,
     traces,
     title: str,
     y_label: str,
-    xaxis_range:tuple,
+    yaxis_range: tuple,
     margin=None,
     yaxis_dtick=None,
     xaxis_range_vals=(1, 53),
@@ -185,7 +289,29 @@ def create_chart(
     yaxis_nticks=6,
     y_offset_dict=None,
 ) -> go.Figure:
-    """Creates the Plotly chart with adjustable parameters."""
+    """
+    Creates a Plotly figure from processed data components.
+
+    This function handles only the chart creation - it takes already
+    processed data (traces, tick values) and creates the visual chart.
+
+    Parameters:
+        xaxis_tickvals: X-axis tick positions
+        xaxis_ticktext: X-axis tick labels
+        traces: Plotly trace objects
+        title (str): Chart title
+        y_label (str): Y-axis label
+        yaxis_range (tuple): Y-axis range (min, max)
+        margin (dict, optional): Chart margins
+        yaxis_dtick (int, optional): Y-axis tick interval
+        xaxis_range_vals (tuple, optional): X-axis range, defaults to (1, 53)
+        xaxis_nticks (int, optional): Number of x-axis ticks
+        yaxis_nticks (int, optional): Number of y-axis ticks, defaults to 6
+        y_offset_dict (dict, optional): Year-specific y-offset adjustments for labels
+
+    Returns:
+        go.Figure: The created Plotly figure
+    """
 
     fig = go.Figure(traces)
 
@@ -209,7 +335,7 @@ def create_chart(
     )
 
     # Apply axis settings
-    fig.update_yaxes(range=xaxis_range, nticks=yaxis_nticks)
+    fig.update_yaxes(range=yaxis_range, nticks=yaxis_nticks)
     fig.update_xaxes(range=xaxis_range_vals, nticks=xaxis_nticks)
 
     return fig
@@ -217,8 +343,8 @@ def create_chart(
 
 def save_chart(fig, filename):
     """Saves the chart as an image and uploads it online."""
-    config = read_config() # Read in config file
-    fig.write_image(os.path.join(config['viz']['outPath'], f'{filename}.svg'))
+
+    fig.write_image(os.path.join(CONFIG['viz']['outPath'], f'{filename}.svg'))
 
     fig.layout.images = [
         dict(
@@ -241,3 +367,65 @@ def save_chart(fig, filename):
     )
 
     py.plot(fig, filename=filename)
+
+
+def generate_and_save_chart(
+    group: str,
+    category: str, 
+    start_year: int,
+    chart_title: str,
+    y_label: str,
+    filename: str,
+    yaxis_range: tuple | None = None,
+    margin: dict | None = None,
+    yaxis_dtick: int | None = None,
+    xaxis_range_vals: tuple = (1, 53),
+    xaxis_nticks: int | None = None,
+    yaxis_nticks: int = 6,
+    y_offset_dict: dict | None = None
+) -> None:
+    """
+    Complete workflow: loads data, processes it, creates chart, and saves it.
+
+    This function handles the entire pipeline from raw data parameters
+    to saved chart file.
+
+    Parameters:
+        group (str): Data group to filter by (e.g., 'total', 'female')
+        category (str): Data category to filter by (e.g., 'prison', 'hdc', 'operational_capacity')
+        start_year (int): Starting year for data filtering
+        chart_title (str): Title for the chart
+        y_label (str): Y-axis label
+        filename (str): Output filename for the chart
+        yaxis_range (tuple, optional): Y-axis range (min, max)
+        margin (dict, optional): Chart margins
+        yaxis_dtick (int, optional): Y-axis tick interval
+        xaxis_range_vals (tuple, optional): X-axis range, defaults to (1, 53)
+        xaxis_nticks (int, optional): Number of x-axis ticks
+        yaxis_nticks (int, optional): Number of y-axis ticks, defaults to 6
+        y_offset_dict (dict, optional): Year-specific y-offset adjustments for labels
+    """
+    # Load and process data
+    df_with_weeks, month_tick_positions, month_tick_labels = load_and_process_data(group, category, start_year)
+
+    # Generate plotting traces
+    plot_traces = generate_traces(df_with_weeks)
+
+    # Create chart using the renamed function
+    fig = create_chart_figure(
+        xaxis_tickvals=month_tick_positions,
+        xaxis_ticktext=month_tick_labels,
+        traces=plot_traces,
+        title=chart_title,
+        y_label=y_label,
+        yaxis_range=yaxis_range or (0, 100000),  # Provide default range if None
+        margin=margin,
+        yaxis_dtick=yaxis_dtick,
+        xaxis_range_vals=xaxis_range_vals,
+        xaxis_nticks=xaxis_nticks,
+        yaxis_nticks=yaxis_nticks,
+        y_offset_dict=y_offset_dict
+    )
+
+    save_chart(fig, filename)
+    return None
