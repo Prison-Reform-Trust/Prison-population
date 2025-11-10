@@ -345,28 +345,28 @@ def save_chart(fig, filename):
     """Saves the chart as an image and uploads it online."""
 
     fig.write_image(os.path.join(CONFIG['viz']['outPath'], f'{filename}.svg'))
+    """Temporary disabled online plotting to Chart Studio"""
+    # fig.layout.images = [
+    #     dict(
+    #         source="https://i.ibb.co/jhfYbyc/PRTlogo-RGB.png",
+    #         xref="paper",
+    #         yref="paper",
+    #         x=-0.08,
+    #         y=1.25,
+    #         sizex=0.15,
+    #         sizey=0.15,
+    #         xanchor="left",
+    #         yanchor="top",
+    #     )
+    # ]
 
-    fig.layout.images = [
-        dict(
-            source="https://i.ibb.co/jhfYbyc/PRTlogo-RGB.png",
-            xref="paper",
-            yref="paper",
-            x=-0.08,
-            y=1.25,
-            sizex=0.15,
-            sizey=0.15,
-            xanchor="left",
-            yanchor="top",
-        )
-    ]
+    # layout_atr = prt_theme.pio.templates["prt_template"].layout
+    # fig.update_layout(
+    #     width=layout_atr.width,
+    #     height=layout_atr.height,
+    # )
 
-    layout_atr = prt_theme.pio.templates["prt_template"].layout
-    fig.update_layout(
-        width=layout_atr.width,
-        height=layout_atr.height,
-    )
-
-    py.plot(fig, filename=filename)
+    # py.plot(fig, filename=filename)
 
 
 def generate_and_save_chart(
