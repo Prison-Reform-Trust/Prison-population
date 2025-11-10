@@ -9,17 +9,30 @@ import src.utilities as utils
 # Set template
 pio.templates.default = "prt_template"
 
+# Constants
+TITLE = "Prison population in England & Wales"
+FILENAME = "prison_population"
+
 
 def main():
     """Creates chart showing the prison population in England and Wales."""
-    utils.generate_and_save_chart(
+    fig = utils.generate_chart(
         group="total",
         category="prison",
         start_year=2021,
-        chart_title="<b>Prison population in England and Wales</b>",
+        chart_title=f"<b>{TITLE}</b>",
         y_label="People in prison",
-        filename="prison_population",
         yaxis_range=(75900, 90100)
+    )
+
+    utils.save_chart(
+        fig,
+        filename=FILENAME,
+    )
+
+    utils.save_plotly_chart_as_html(
+        fig,
+        filename=FILENAME,
     )
     return None
 

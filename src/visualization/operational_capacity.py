@@ -12,6 +12,10 @@ import src.utilities as utils
 # Set template
 pio.templates.default = "prt_template"
 
+# Constants
+TITLE = "Operational capacity in England and Wales"
+FILENAME = "operational_capacity"
+
 
 def main():
     """Creates chart showing the operational capacity of prisons in England and Wales."""
@@ -20,15 +24,24 @@ def main():
         "2023": 400,
     }
 
-    utils.generate_and_save_chart(
+    fig = utils.generate_chart(
         group="total",
         category="operational_capacity",
         start_year=2021,
-        chart_title="<b>Operational capacity in England and Wales</b>",
+        chart_title=f"<b>{TITLE}</b>",
         y_label="Prison places",
-        filename="operational_capacity",
         yaxis_range=(75900, 90100),
         y_offset_dict=y_offset_dict
+    )
+
+    utils.save_chart(
+        fig,
+        filename=FILENAME,
+    )
+
+    utils.save_plotly_chart_as_html(
+        fig,
+        filename=FILENAME,
     )
     return None
 

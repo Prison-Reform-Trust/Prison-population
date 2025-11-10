@@ -13,6 +13,10 @@ import src.utilities as utils
 # Set template
 pio.templates.default = "prt_template"
 
+# Constants
+TITLE = "HDC population in England and Wales"
+FILENAME = "HDC_population"
+
 
 def main():
     """Creates chart showing the HDC population in England and Wales."""
@@ -21,16 +25,25 @@ def main():
         "2021": 200,
     }
 
-    utils.generate_and_save_chart(
+    fig = utils.generate_chart(
         group="total",
         category="hdc",
         start_year=2021,
-        chart_title="<b>HDC population in England and Wales</b>",
+        chart_title=f"<b>{TITLE}</b>",
         y_label="People on Home Detention Curfew",
-        filename="HDC_population",
         yaxis_range=(1490, 4510),
         yaxis_dtick=500,
         y_offset_dict=y_offset_dict
+    )
+
+    utils.save_chart(
+        fig,
+        filename=FILENAME,
+    )
+
+    utils.save_plotly_chart_as_html(
+        fig,
+        filename=FILENAME,
     )
     return None
 
