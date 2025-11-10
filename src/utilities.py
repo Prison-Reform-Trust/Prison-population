@@ -7,7 +7,6 @@ import logging
 import os
 import textwrap
 
-import chart_studio.plotly as py  # Online plotting
 import pandas as pd
 import plotly.graph_objs as go  # Offline plotting
 import plotly.io as pio
@@ -345,7 +344,7 @@ def save_chart(fig, filename):
     """Saves the chart as an image and uploads it online."""
 
     fig.write_image(os.path.join(CONFIG['viz']['outPath'], f'{filename}.svg'))
-    """Temporary disabled online plotting to Chart Studio"""
+    # NOTE: Need to move the logo placement from here
     # fig.layout.images = [
     #     dict(
     #         source="https://i.ibb.co/jhfYbyc/PRTlogo-RGB.png",
@@ -366,16 +365,36 @@ def save_chart(fig, filename):
     #     height=layout_atr.height,
     # )
 
-    # py.plot(fig, filename=filename)
+
+def save_plotly_chart_as_html(fig: go.Figure, filename: str) -> None:
+    """Saves a Plotly figure as an HTML file using a Jinja2 template.
+
+    Args:
+        fig (go.Figure): Plotly figure object.
+        output_path (str): Path where the HTML file will be saved.
+    """
+    output_path = os.path.join(
+        CONFIG["viz"]["outPath"],
+        filename + ".html"
+    )
+    ensure_directory(os.path.dirname(output_path))
+
+    with open(output_path, "w", encoding="utf-8") as output_file:
+        output_file.write(
+            fig.to_html(
+                full_html=False,
+                include_plotlyjs='cdn',
+                config=CONFIG['plotly']['config']
+            )
+        )
 
 
-def generate_and_save_chart(
+def generate_chart(
     group: str,
-    category: str, 
+    category: str,
     start_year: int,
     chart_title: str,
     y_label: str,
-    filename: str,
     yaxis_range: tuple | None = None,
     margin: dict | None = None,
     yaxis_dtick: int | None = None,
@@ -383,12 +402,9 @@ def generate_and_save_chart(
     xaxis_nticks: int | None = None,
     yaxis_nticks: int = 6,
     y_offset_dict: dict | None = None
-) -> None:
+) -> go.Figure:
     """
-    Complete workflow: loads data, processes it, creates chart, and saves it.
-
-    This function handles the entire pipeline from raw data parameters
-    to saved chart file.
+    Loads data, processes it, creates chart.
 
     Parameters:
         group (str): Data group to filter by (e.g., 'total', 'female')
@@ -396,7 +412,6 @@ def generate_and_save_chart(
         start_year (int): Starting year for data filtering
         chart_title (str): Title for the chart
         y_label (str): Y-axis label
-        filename (str): Output filename for the chart
         yaxis_range (tuple, optional): Y-axis range (min, max)
         margin (dict, optional): Chart margins
         yaxis_dtick (int, optional): Y-axis tick interval
@@ -404,6 +419,8 @@ def generate_and_save_chart(
         xaxis_nticks (int, optional): Number of x-axis ticks
         yaxis_nticks (int, optional): Number of y-axis ticks, defaults to 6
         y_offset_dict (dict, optional): Year-specific y-offset adjustments for labels
+    Returns:
+        go.Figure: The created Plotly figure
     """
     # Load and process data
     df_with_weeks, month_tick_positions, month_tick_labels = load_and_process_data(group, category, start_year)
@@ -427,5 +444,4 @@ def generate_and_save_chart(
         y_offset_dict=y_offset_dict
     )
 
-    save_chart(fig, filename)
-    return None
+    return fig
