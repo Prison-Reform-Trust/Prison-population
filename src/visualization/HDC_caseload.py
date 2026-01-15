@@ -28,7 +28,7 @@ def main():
     fig = utils.generate_chart(
         group="total",
         category="hdc",
-        start_year=2021,
+        start_year=2022,
         chart_title=f"<b>{TITLE}</b>",
         y_label="People on Home Detention Curfew",
         yaxis_range=(1490, 4510),

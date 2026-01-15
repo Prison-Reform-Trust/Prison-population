@@ -16,7 +16,7 @@ from src.visualization import (HDC_caseload, female_population,
 
 def download_data_and_make_dataset():
     """Download data and create dataset. By default, downloads data for the current year."""
-    download_data.download_prison_population_data(years=2025)
+    download_data.download_prison_population_data(years=2026)
     make_dataset.main()
     weekly_data_summary.main()
 

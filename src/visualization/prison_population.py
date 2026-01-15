@@ -19,7 +19,7 @@ def main():
     fig = utils.generate_chart(
         group="total",
         category="prison",
-        start_year=2021,
+        start_year=2022,
         chart_title=f"<b>{TITLE}</b>",
         y_label="People in prison",
         yaxis_range=(75900, 90100)

@@ -22,15 +22,16 @@ def main():
 
     y_offset_dict = {
         "2023": 400,
+        "2025": 600,
     }
 
     fig = utils.generate_chart(
         group="total",
         category="operational_capacity",
-        start_year=2021,
+        start_year=2022,
         chart_title=f"<b>{TITLE}</b>",
         y_label="Prison places",
-        yaxis_range=(75900, 90100),
+        yaxis_range=(75900, 92100),
         y_offset_dict=y_offset_dict
     )
 
