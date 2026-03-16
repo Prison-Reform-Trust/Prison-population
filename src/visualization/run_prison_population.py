@@ -23,7 +23,7 @@ def download_data_and_make_dataset():
 
 def make_charts():
     """Generate and save charts using the processed dataset."""
-    prison_population.main()
+    prison_population.main()  # TODO: #20 Error if five years of data are not available. This conflicts with the use of a years parameter of less than five years in download_prison_population_data if this data hasn't already been downloaded
     female_population.main()
     HDC_caseload.main()
     operational_capacity.main()
