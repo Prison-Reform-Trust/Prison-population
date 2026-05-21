@@ -18,6 +18,7 @@ dependencies:
   - black=23.11.0=py312hecd8cb5_0
   - blas=1.0=openblas
   - bleach=4.1.0=pyhd3eb1b0_0
+  - blinker=1.9.0=pyhff2d567_0
   - boost-cpp=1.82.0=ha357a0b_2
   - bottleneck=1.3.7=py312h32608ca_0
   - brotli=1.0.9=hca72f7f_7
@@ -37,11 +38,14 @@ dependencies:
   - contourpy=1.2.0=py312ha357a0b_0
   - cookiecutter=2.6.0=py312hecd8cb5_0
   - cycler=0.11.0=pyhd3eb1b0_0
+  - dash=4.1.0=pyhd8ed1ab_0
+  - dash-bootstrap-components=2.0.4=pyhcf101f3_0
   - debugpy=1.6.7=py312hcec6c5f_0
   - decorator=5.1.1=pyhd3eb1b0_0
   - defusedxml=0.7.1=pyhd3eb1b0_0
   - executing=0.8.3=pyhd3eb1b0_0
   - expat=2.5.0=hcec6c5f_0
+  - flask=3.1.3=pyhcf101f3_1
   - fontconfig=2.14.1=hb0a0c50_2
   - fonttools=4.25.0=pyhd3eb1b0_0
   - freetype=2.12.1=hd8bbffd_0
@@ -54,6 +58,7 @@ dependencies:
   - ipykernel=6.28.0=py312hecd8cb5_0
   - ipython=8.20.0=py312hecd8cb5_0
   - ipywidgets=8.1.2=py312hecd8cb5_0
+  - itsdangerous=2.2.0=pyhd8ed1ab_1
   - jedi=0.18.1=py312hecd8cb5_1
   - jinja2=3.1.3=py312hecd8cb5_0
   - jpeg=9e=h6c40b1e_1
@@ -86,6 +91,7 @@ dependencies:
   - libev=4.33=h9ed2024_1
   - libffi=3.4.4=hecd8cb5_0
   - libgfortran=5.0.0=11_3_0_hecd8cb5_28
+  - libgfortran-ng=3.0.1=h93005f0_2
   - libgfortran5=11.3.0=h9dfd629_28
   - libglib=2.78.4=h19e1a8f_0
   - libiconv=1.16=hca72f7f_2
@@ -125,6 +131,7 @@ dependencies:
   - numpy=1.26.4=py312h7d6adbd_0
   - numpy-base=1.26.4=py312hbb3573c_0
   - odfpy=1.4.1=py_0
+  - openblas=0.3.1=hd130d23_0
   - openjpeg=2.4.0=h66ea3da_0
   - openssl=3.0.13=hca72f7f_0
   - overrides=7.4.0=py312hecd8cb5_0
@@ -198,6 +205,7 @@ dependencies:
   - wcwidth=0.2.5=pyhd3eb1b0_0
   - webencodings=0.5.1=py312hecd8cb5_2
   - websocket-client=0.58.0=py312hecd8cb5_4
+  - werkzeug=3.1.8=pyhcf101f3_0
   - wheel=0.41.2=py312hecd8cb5_0
   - widgetsnbextension=4.0.10=py312hecd8cb5_0
   - xz=5.4.6=h6c40b1e_0
