@@ -164,7 +164,7 @@ def process_file(file_path: str) -> pd.DataFrame:
 
         if df.shape in [(18, 8), (17, 8), (17, 9)]:  # Historic formats
             return process_historic_file(df, file_path)
-        elif df.shape == (25, 9):
+        elif df.shape in [(25, 9), (27, 9)]:  # New formats
             return process_new_file(df, file_path)
         else:
             logging.warning(f"Skipping {file_path}: Unrecognized format {df.shape}")
